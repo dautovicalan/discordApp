@@ -1,5 +1,6 @@
 package com.alan.discordapp;
 
+import com.alan.businessLayer.UserManager;
 import com.alan.models.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,7 +29,7 @@ public class LoginController implements Initializable {
     }
 
     public  void login(){
-        errorLabel.setVisible(true);
+        // errorLabel.setVisible(true);
         User loginUser = new User(loginTexfField.getText());
 
 
@@ -36,14 +37,18 @@ public class LoginController implements Initializable {
 
         Scene scene = null;
         try {
-            scene = new Scene(fxmlLoader.load(), 600, 400);
+            scene = new Scene(fxmlLoader.load(), 1200, 600);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
+        UserManager.setLoggedInUser(loginUser);
         Stage stage = MainApplication.getMainStage();
         stage.setTitle("Fake Discord!");
         stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.setMinWidth(1200);
+        stage.setMinHeight(600);
         stage.show();
     }
 }

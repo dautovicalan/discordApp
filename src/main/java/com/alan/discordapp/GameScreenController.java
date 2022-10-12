@@ -3,24 +3,22 @@ package com.alan.discordapp;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-
+import javafx.scene.layout.StackPane;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class GameScreenController implements Initializable {
-
     @FXML
-    private BorderPane mainPane;
+    private StackPane mainPane;
     @FXML
     private Button homeButton;
     @FXML
     private Button statsButton;
     @FXML
-    private Button neznamButton;
+    private Button profileButton;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -29,21 +27,31 @@ public class GameScreenController implements Initializable {
 
     public void showHomeScene(){
         try {
-            AnchorPane homeView = FXMLLoader.load(getClass().getResource("homeScreen.fxml"));
-            mainPane.setCenter(homeView);
+            Parent homeView = FXMLLoader.load(getClass().getResource("homeScreen.fxml"));
+            mainPane.getChildren().removeAll();
+            mainPane.getChildren().setAll(homeView);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void showStatsScene(){
-        AnchorPane statsView = null;
         try {
-            statsView = FXMLLoader.load(getClass().getResource("statsScreen.fxml"));
-            mainPane.setCenter(statsView);
+            Parent statsView = FXMLLoader.load(getClass().getResource("statsScreen.fxml"));
+            mainPane.getChildren().removeAll();
+            mainPane.getChildren().setAll(statsView);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
 
+    public void showProfileScene(){
+        try {
+            Parent profileView = FXMLLoader.load(getClass().getResource("profileScreen.fxml"));
+            mainPane.getChildren().removeAll();
+            mainPane.getChildren().setAll(profileView);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
