@@ -28,6 +28,7 @@ public class ChatScreenController implements Initializable {
         if (textField.getText().equals("")){
             return;
         }
+
         chatBox.appendText(textField.getText() + "\n");
         textField.clear();
     }

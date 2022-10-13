@@ -1,4 +1,4 @@
-package com.alan.businessLayer;
+package com.alan.models;
 
 import java.net.Inet4Address;
 

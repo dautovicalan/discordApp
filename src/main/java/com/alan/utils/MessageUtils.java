@@ -13,10 +13,6 @@ public class MessageUtils {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("message");
         alert.setContentText(message);
-        alert.showAndWait().ifPresent(rs -> {
-            if (rs == ButtonType.OK) {
-                System.out.println("Pressed OK.");
-            }
-        });
+        alert.showAndWait();
     }
 }

@@ -1,4 +1,4 @@
-package com.alan.businessLayer;
+package com.alan.models;
 
 public class Chat {
     private String conversation;
