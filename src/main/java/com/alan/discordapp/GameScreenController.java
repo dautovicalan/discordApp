@@ -20,6 +20,9 @@ public class GameScreenController implements Initializable {
     @FXML
     private Button profileButton;
 
+    @FXML
+    private Button settingsButton;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -53,5 +56,10 @@ public class GameScreenController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    public void showSettingsScene() throws IOException {
+        Parent settingView = FXMLLoader.load(getClass().getResource("settingsScreen.fxml"));
+        mainPane.getChildren().removeAll();
+        mainPane.getChildren().setAll(settingView);
     }
 }
