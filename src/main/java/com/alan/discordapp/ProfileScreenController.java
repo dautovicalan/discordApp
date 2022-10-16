@@ -2,12 +2,13 @@ package com.alan.discordapp;
 
 import com.alan.businessLayer.UserManager;
 import com.alan.models.User;
-import com.alan.utils.MessageUtils;
+import com.alan.utils.AlertUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -29,7 +30,7 @@ public class ProfileScreenController implements Initializable {
         surname.setText(currentUser.getSurname());
     }
 
-    public void saveProfile(){
+    public void saveProfile() throws IOException {
         String newUsername, newForename, newSurname;
         newUsername = username.getText().trim();
         newForename = forename.getText().trim();
@@ -37,6 +38,6 @@ public class ProfileScreenController implements Initializable {
 
         User newUserInfo = new User(newUsername, newForename, newSurname);
         UserManager.setLoggedInUser(newUserInfo);
-        MessageUtils.showInfoMessage("Succesfuly updated your profile");
+        AlertUtils.showInfoMessage("Succesfuly updated your profile");
     }
 }

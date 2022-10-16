@@ -28,7 +28,7 @@ public class LoginController implements Initializable {
 
     }
 
-    public  void login(){
+    public  void login() throws IOException {
         // errorLabel.setVisible(true);
         User loginUser = new User(loginTexfField.getText());
 

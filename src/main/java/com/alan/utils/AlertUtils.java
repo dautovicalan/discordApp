@@ -1,11 +1,10 @@
 package com.alan.utils;
 
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 
-public class MessageUtils {
+public class AlertUtils {
 
-    private MessageUtils(){
+    private AlertUtils(){
 
     }
 

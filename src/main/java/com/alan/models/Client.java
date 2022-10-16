@@ -4,18 +4,17 @@ import com.alan.discordapp.ChatScreenController;
 import javafx.scene.layout.VBox;
 
 import java.io.*;
-import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server {
+public class Client {
 
     private ServerSocket serverSocket;
     private Socket socket;
     private BufferedReader bufferedReader;
     private BufferedWriter bufferedWriter;
 
-    public Server(ServerSocket serverSocket) {
+    public Client(ServerSocket serverSocket) {
 
         try {
             this.serverSocket = serverSocket;
@@ -29,7 +28,7 @@ public class Server {
         }
     }
 
-    public void sendMessageToClient(String message){
+    public void sendMessageToServer(String message){
         try {
             bufferedWriter.write(message);
             bufferedWriter.newLine();
@@ -41,7 +40,7 @@ public class Server {
         }
     }
 
-    public void receiveMessageFromClient(VBox vBox){
+    public void receiveMessageFromServer(VBox vBox){
         new Thread(() -> {
             while (socket.isConnected()){
                 try {

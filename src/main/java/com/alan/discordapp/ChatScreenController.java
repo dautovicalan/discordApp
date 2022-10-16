@@ -1,16 +1,16 @@
 package com.alan.discordapp;
 
+import com.alan.businessLayer.ConversationManager;
+import com.alan.businessLayer.UserManager;
+import com.alan.models.Message;
 import com.alan.models.Server;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -18,10 +18,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-import java.io.IOException;
-import java.net.ServerSocket;
+import javax.xml.bind.JAXBException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class ChatScreenController implements Initializable {
@@ -31,56 +29,68 @@ public class ChatScreenController implements Initializable {
     @FXML
     private Button sendButton;
     @FXML
+    private Button saveConvoButton;
+    @FXML
     private VBox vBoxMessage;
     @FXML
     private ScrollPane scrollPaneMain;
+    @FXML
+    private VBox vBoxAllMessages;
 
     private Server server;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        try {
-            server = new Server(new ServerSocket(1234));
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error creating server");
-        }
 
-        vBoxMessage.heightProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number newValue) {
-                scrollPaneMain.setVvalue((Double) newValue);
+        prepareMessageHBox(Pos.CENTER, "Miroslav Peric", vBoxAllMessages);
+        // TODO: 15.10.2022. SERVER NOT WORKING
+            //server = new Server(new ServerSocket(1234));
+
+        vBoxMessage.heightProperty().addListener((observableValue, number, newValue)
+                -> scrollPaneMain.setVvalue((Double) newValue));
+
+        //server.receiveMessageFromClient(vBoxMessage);
+
+        sendButton.setOnAction(actionEvent -> {
+            String messageToSend = textField.getText();
+            if (!messageToSend.isEmpty()){
+                prepareMessageHBox(Pos.CENTER_RIGHT, messageToSend, vBoxMessage);
+                //server.sendMessageToClient(messageToSend);
+                textField.clear();
+
+                addMessageToComponent("Ja sam odgovor na svako pitanje", vBoxMessage);
+                saveConversation();
+                ConversationManager.addMessage(Message.createMessage(messageToSend,
+                        UserManager.getLoggedInUser()));
             }
         });
 
-        server.receiveMessageFromClient(vBoxMessage);
-
-        sendButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                String messageToSend = textField.getText();
-                if (!messageToSend.isEmpty()){
-                    HBox hBox = new HBox();
-                    hBox.setAlignment(Pos.CENTER_RIGHT);
-                    hBox.setPadding(new Insets(5,5,5,10));
-
-                    Text text = new Text(messageToSend);
-                    TextFlow textFlow = new TextFlow(text);
-
-                    textFlow.setStyle("-fx-color: rgb(239, 242, 255); " +
-                            "-fx-background-color: rgb(15,125,242); " +
-                            "-fx-background-radius: 20px;");
-
-                    textFlow.setPadding(new Insets(5,5,5,10));
-                    text.setFill(Color.color(0.934, 0.945, 0.996));
-
-                    hBox.getChildren().add(textFlow);
-                    vBoxMessage.getChildren().add(hBox);
-
-                    server.sendMessageToClient(messageToSend);
-                    textField.clear();
-                }
+        saveConvoButton.setOnAction(actionEvent -> {
+            try {
+                ConversationManager.saveConversation();
+            } catch (JAXBException e) {
+                e.printStackTrace();
+                System.out.println("Cannot save this convo, contact support xd");
             }
         });
+    }
+
+    private void prepareMessageHBox(Pos centerRight, String messageToSend, VBox vBoxMessage) {
+        HBox hBox = new HBox();
+        hBox.setAlignment(centerRight);
+        hBox.setPadding(new Insets(5,5,5,10));
+
+        Text text = new Text(messageToSend);
+        TextFlow textFlow = new TextFlow(text);
+
+        textFlow.setStyle("-fx-color: rgb(239, 242, 255); " +
+                "-fx-background-color: rgb(15,125,242); " +
+                "-fx-background-radius: 20px;");
+
+        textFlow.setPadding(new Insets(5,5,5,10));
+        text.setFill(Color.color(0.934, 0.945, 0.996));
+
+        hBox.getChildren().add(textFlow);
+        vBoxMessage.getChildren().add(hBox);
     }
 
     public static void addMessageToComponent(String messageFromClient, VBox vBox){
@@ -95,17 +105,28 @@ public class ChatScreenController implements Initializable {
                 "-fx-background-radius: 20px;");
 
         textFlow.setPadding(new Insets(5,5,5,10));
-        text.setFill(Color.color(0.934, 0.945, 0.996));
 
         hBox.getChildren().add(textFlow);
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                vBox.getChildren().add(hBox);
-            }
-        });
+        Platform.runLater(() -> vBox.getChildren().add(hBox));
+    }
 
+    private void saveConversation(){
+        ObservableList<Node> conversation = vBoxMessage.getChildren();
+        conversation.forEach(node -> {
+            HBox hBox = (HBox) node;
+            ObservableList<Node> childrenHbox = hBox.getChildren();
+            childrenHbox.forEach(x -> {
+                if (x instanceof TextFlow){
+                    ObservableList<Node> childrenTextFlow = ((TextFlow) x).getChildren();
+                    childrenTextFlow.forEach(y -> {
+                        if (y instanceof Text){
+                            System.out.println(((Text)y).getText());
+                        }
+                    });
+                }
+            });
+        });
     }
 
 }
