@@ -14,7 +14,6 @@ import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 public class VoiceScreenController implements Initializable {
-
     //http://www.java2s.com/Tutorial/Java/0120__Development/CapturingAudiowithJavaSoundAPI.htm
     @FXML
     private Button sendVoiceMessage;
