@@ -4,15 +4,22 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="461.0" prefWidth="775.0" style="-fx-background-color: blue;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.alan.discordapp.HomeScreenController">
    <children>
-      <BorderPane fx:id="mainPane" prefHeight="461.0" prefWidth="775.0" style="-fx-background-color: grey;">
+      <BorderPane fx:id="mainPane" prefHeight="461.0" prefWidth="775.0" style="-fx-background-color: #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7;">
          <left>
-            <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+            <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-spacing: 10px;" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="talkButton" mnemonicParsing="false" text="Breath Air!" />
-                  <Button fx:id="chatButton" mnemonicParsing="false" onAction="#showChatScene" text="Chat" />
+                  <Button fx:id="talkButton" mnemonicParsing="false" onAction="#showVoiceScene" prefHeight="26.0" prefWidth="172.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Voice">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Button>
+                  <Button fx:id="chatButton" mnemonicParsing="false" onAction="#showChatScene" prefHeight="26.0" prefWidth="126.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Chat">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Button>
                </children>
             </VBox>
          </left>

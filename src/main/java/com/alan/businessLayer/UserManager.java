@@ -14,14 +14,14 @@ public class UserManager {
     private static User loggedInUser;
 
     public static void setLoggedInUser(User user) throws IOException {
-        if (!Files.exists(Paths.get(USER_FOLDER_PATH, user.getUserName()))){
-            Files.createDirectories(Paths.get(USER_FOLDER_PATH, user.getUserName()));
-            Files.write(Paths.get(USER_FOLDER_PATH, user.getUserName(), "userInfo.txt"), user.prepareForConfig());
-            loggedInUser = user;
+        if (!Files.exists(Paths.get(USER_FOLDER_PATH, user.getFirstName()))){
+            //Files.createDirectories(Paths.get(USER_FOLDER_PATH, user.getUserName()));
+            //Files.write(Paths.get(USER_FOLDER_PATH, user.getUserName(), "userInfo.txt"), user.prepareForConfig());
+            //loggedInUser = user;
         } else {
-            User parseUser = User.parseFromFile(Paths.get(USER_FOLDER_PATH, user.getUserName(), "userInfo.txt"));
-            loggedInUser = parseUser;
+            //User parseUser = User.parseFromFile(Paths.get(USER_FOLDER_PATH, user.getUserName(), "userInfo.txt"));
         }
+            loggedInUser = user;
     }
 
     public static User getLoggedInUser() { return loggedInUser; }

@@ -5,9 +5,10 @@ import com.alan.models.User;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import java.io.Serializable;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Message {
+public class Message implements Serializable {
     private final String DEL = "|";
     @XmlElement(name = "messageContent")
     private String messageContent;

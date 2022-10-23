@@ -6,6 +6,7 @@ import com.alan.utils.JAXBUtils;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,10 +19,21 @@ public class ConversationManager {
         conversation.getAllMessages().add(message);
     }
 
-    public static void saveConversation() throws JAXBException {
+    public static int getMessagesSize(){return conversation.getAllMessages().size();}
+
+    public static void saveConversation() throws JAXBException, IOException {
         if (conversation.getAllMessages().size() != 0){
-            JAXBUtils.save(conversation, "messages.xml");
+            try(ObjectOutputStream serializer = new ObjectOutputStream(new FileOutputStream("savedMessages.ser"))){
+                serializer.writeObject(conversation);
+            }
         }
+    }
+
+    public static Conversation loadConversation() throws IOException, ClassNotFoundException {
+        try(ObjectInputStream deserialzer = new ObjectInputStream(new FileInputStream("savedMessages.ser"))){
+            conversation = (Conversation) deserialzer.readObject();
+        }
+        return conversation;
     }
 
 

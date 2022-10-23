@@ -1,30 +1,41 @@
 package com.alan.models;
 
+import javafx.scene.image.Image;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.UUID;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class User {
+public class User implements Serializable {
 
     private final String DEL = "|";
-    @XmlElement(name = "userName")
-    private String userName;
-    @XmlElement(name = "forename")
-    private String forename;
-    @XmlElement(name = "surname")
-    private String surname;
+    @XmlElement(name = "firstName")
+    private String firstName;
+    @XmlElement(name = "lastName")
+    private String lastName;
 
-    public User(String userName) {
-        this.userName = userName;
+    private Image userPicture;
+
+    public Image getUserPicture() {
+        return userPicture;
     }
 
-    public User(String userName, String forename, String surname) {
-        this.userName = userName;
-        this.forename = forename;
-        this.surname = surname;
+    public void setUserPicture(Image userPicture) {
+        this.userPicture = userPicture;
+    }
+
+    public User(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public User(String firstName, String lastName, Image userPicture) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userPicture = userPicture;
     }
 
     public static User parseFromFile(Path path) {
@@ -32,38 +43,19 @@ public class User {
         return new User("mirko");
     }
 
-    public String getForename() {
-        return forename;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getUserName() {
-        return userName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public void setForename(String forename) {
-        this.forename = forename;
+    public String getLastName() {
+        return lastName;
     }
 
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String generateUniqueFolderName(){
-        return this.forename + "_" + this.surname + "_" + UUID.randomUUID();
-    }
-
-
-    @Override
-    public String toString() {
-        return userName;
-    }
-
-    public byte[] prepareForConfig() {
-        String userConfigPrepare = userName + DEL + forename + DEL + surname;
-        return userConfigPrepare.getBytes();
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

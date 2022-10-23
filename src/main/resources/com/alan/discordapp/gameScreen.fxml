@@ -12,7 +12,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.alan.discordapp.GameScreenController">
    <top>
-      <MenuBar BorderPane.alignment="CENTER">
+      <MenuBar style="-fx-background-color: #5057Ac #5057Ac;" BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
@@ -33,35 +33,35 @@
       </MenuBar>
    </top>
    <left>
-      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #5057Ac; -fx-spacing: 25px; -fx-padding: 5;" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="homeButton" mnemonicParsing="false" onAction="#showHomeScene" text="Home">
+            <Button fx:id="homeButton" mnemonicParsing="false" onAction="#showHomeScene" prefHeight="43.0" prefWidth="118.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Home">
                <font>
-                  <Font size="23.0" />
+                  <Font size="18.0" />
                </font>
             </Button>
-            <Button fx:id="statsButton" mnemonicParsing="false" onAction="#showStatsScene" text="Stats">
+            <Button fx:id="statsButton" mnemonicParsing="false" onAction="#showStatsScene" prefHeight="43.0" prefWidth="134.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Stats">
                <font>
-                  <Font size="23.0" />
+                  <Font size="18.0" />
                </font>
             </Button>
-            <Button fx:id="profileButton" mnemonicParsing="false" onAction="#showProfileScene" text="Profile">
+            <Button fx:id="profileButton" mnemonicParsing="false" onAction="#showProfileScene" prefHeight="43.0" prefWidth="158.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Profile">
                <font>
-                  <Font size="23.0" />
+                  <Font size="18.0" />
                </font>
             </Button>
-            <Button fx:id="settingsButton" mnemonicParsing="false" onAction="#showSettingsScene" prefHeight="47.0" prefWidth="93.0" text="Settings">
+            <Button fx:id="settingsButton" mnemonicParsing="false" onAction="#showSettingsScene" prefHeight="47.0" prefWidth="154.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Settings">
                <font>
-                  <Font size="17.0" />
+                  <Font size="18.0" />
                </font>
             </Button>
          </children>
       </VBox>
    </left>
    <center>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: red;" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <StackPane fx:id="mainPane" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: yellow;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <StackPane fx:id="mainPane" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: #727CF7 #727CF7;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
    </center>

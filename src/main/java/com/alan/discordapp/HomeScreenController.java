@@ -35,4 +35,13 @@ public class HomeScreenController implements Initializable {
             throw new RuntimeException(e);
         }
     }
+
+    public void showVoiceScene(){
+        try{
+            AnchorPane voiceView = FXMLLoader.load(getClass().getResource("voiceScreen.fxml"));
+            mainPane.setCenter(voiceView);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

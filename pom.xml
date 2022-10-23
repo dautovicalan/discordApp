@@ -44,8 +44,12 @@
             <artifactId>jaxb-api</artifactId>
             <version>2.4.0-b180830.0359</version>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-media</artifactId>
+            <version>20-ea+4</version>
+        </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>

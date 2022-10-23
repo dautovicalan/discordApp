@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.alan.discordapp.LoginController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #727CF7#727CF7 #727CF7#727CF7;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.alan.discordapp.LoginController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -25,20 +25,26 @@
     <children>
         <Label text="Welcome to fake Discord" GridPane.columnSpan="3" GridPane.halignment="CENTER">
             <font>
-                <Font size="18.0" />
+                <Font name="Charm Regular" size="36.0" />
             </font>
         </Label>
-        <Label text="Username" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+        <Label style="-fx-font-weight: bold;" text="First Name" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
             <GridPane.margin>
                 <Insets right="5.0" />
             </GridPane.margin>
+         <font>
+            <Font name="Charm Regular" size="24.0" />
+         </font>
         </Label>
-        <Label text="Password" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+        <Label style="-fx-font-weight: bold;" text="Last Name" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
             <GridPane.margin>
                 <Insets right="5.0" />
             </GridPane.margin>
+         <font>
+            <Font name="Charm Regular" size="24.0" />
+         </font>
         </Label>
-        <TextField fx:id="loginTexfField" GridPane.columnIndex="1" GridPane.rowIndex="1">
+        <TextField fx:id="loginTexfField" promptText="First name" GridPane.columnIndex="1" GridPane.rowIndex="1">
             <opaqueInsets>
                 <Insets />
             </opaqueInsets>
@@ -46,7 +52,7 @@
                 <Insets left="5.0" right="5.0" />
             </GridPane.margin>
         </TextField>
-        <TextField fx:id="passwordTextField" GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <TextField fx:id="passwordTextField" promptText="Last name" GridPane.columnIndex="1" GridPane.rowIndex="2">
             <opaqueInsets>
                 <Insets />
             </opaqueInsets>
@@ -54,7 +60,7 @@
                 <Insets left="5.0" right="5.0" />
             </GridPane.margin>
         </TextField>
-        <Button mnemonicParsing="false" onAction="#login" prefWidth="200.0" text="LOGIN" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+        <Button mnemonicParsing="false" onAction="#login" prefWidth="200.0" styleClass="mainButton" stylesheets="@styles/style.css" text="LOGIN" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
       <Label fx:id="errorLabel" text="Login credentials are wrong" textFill="#f82c2c" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <font>
             <Font size="12.0" />
