@@ -16,6 +16,7 @@ public class StatsScreenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        messagesSentLabel.setText("You sent " + ConversationManager.getMessagesSize() + " messages");
+        System.out.println(ConversationManager.getStatistic());
+        messagesSentLabel.setText(ConversationManager.getStatistic());
     }
 }

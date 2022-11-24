@@ -24,6 +24,6 @@
             <Font name="Arial Black" size="24.0" />
          </font></Label>
       <ComboBox fx:id="resolutionType" prefWidth="150.0" GridPane.columnIndex="1" />
-      <Button fx:id="changeResolution" mnemonicParsing="false" prefHeight="55.0" prefWidth="134.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Save Settings" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <Button fx:id="changeResolution" mnemonicParsing="false" onAction="#saveSettings" prefHeight="55.0" prefWidth="134.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Save Settings" GridPane.columnIndex="1" GridPane.rowIndex="1" />
    </children>
 </GridPane>

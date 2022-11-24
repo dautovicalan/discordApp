@@ -21,6 +21,9 @@ public class GameScreenController implements Initializable {
     private Button profileButton;
 
     @FXML
+    private Button rankButton;
+
+    @FXML
     private Button settingsButton;
 
     @Override
@@ -56,6 +59,11 @@ public class GameScreenController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    public void showRankScene() throws IOException {
+        Parent settingView = FXMLLoader.load(getClass().getResource("leaderboardScreen.fxml"));
+        mainPane.getChildren().removeAll();
+        mainPane.getChildren().setAll(settingView);
     }
     public void showSettingsScene() throws IOException {
         Parent settingView = FXMLLoader.load(getClass().getResource("settingsScreen.fxml"));

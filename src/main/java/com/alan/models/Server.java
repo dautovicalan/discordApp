@@ -19,6 +19,7 @@ public class Server {
 
         try {
             this.serverSocket = serverSocket;
+            System.out.println("Listening on port " + this.serverSocket.getLocalPort());
             this.socket = serverSocket.accept();
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));

@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Set;
 
 public class SettingsManager {
 
@@ -19,17 +20,32 @@ public class SettingsManager {
     private SettingsManager() {
     }
 
-    public static void saveSettings(Settings settings) throws IOException {
+    private static Settings currenSettings;
+
+    public static void saveSettings() throws IOException {
         Path filePath = Paths.get(PATH);
-        Files.write(filePath, settings.prepareForFile().getBytes(StandardCharsets.UTF_8));
+        Files.write(filePath, currenSettings.prepareForFile().getBytes(StandardCharsets.UTF_8));
     }
 
-    public static Settings loadSettings() throws IOException {
-        // TODO: 14.10.2022. FINISH LOADING
+    public static void changeCurrentSettings(Settings settings){
+        currenSettings = settings;
+    }
+
+    public static void loadSettings() throws IOException {
         Path filePath = Paths.get(PATH);
         List<String> settingsList = Files.readAllLines(filePath, StandardCharsets.UTF_8);
         System.out.println(settingsList);
-        return new Settings(ResolutionType.SMALL);
+        currenSettings = new Settings(ResolutionType.valueOf(settingsList
+                .stream()
+                .findFirst()
+                .get()));
+    }
+
+    public static Settings getCurrenSettings(){
+        if (currenSettings == null){
+            return new Settings(ResolutionType.SMALL);
+        }
+        return currenSettings;
     }
 
 }

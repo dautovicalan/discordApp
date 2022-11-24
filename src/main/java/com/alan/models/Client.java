@@ -1,74 +1,85 @@
 package com.alan.models;
 
-import com.alan.discordapp.ChatScreenController;
-import javafx.scene.layout.VBox;
+import com.alan.discordapp.Server;
 
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class Client {
 
-    private ServerSocket serverSocket;
-    private Socket socket;
-    private BufferedReader bufferedReader;
-    private BufferedWriter bufferedWriter;
+    public static void main(String[] args) throws IOException {
+        Socket socket1 = new Socket(Server.HOST, Server.PORT);
+        Client client = new Client(socket1);
+        client.sendMessage();
+        client.listenForMessage();
 
-    public Client(ServerSocket serverSocket) {
-
-        try {
-            this.serverSocket = serverSocket;
-            this.socket = serverSocket.accept();
-            this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-        } catch (IOException e){
-            System.out.println("Error creating server");
-            e.printStackTrace();
-            closeEveryConnection(socket, bufferedReader, bufferedWriter);
-        }
     }
 
-    public void sendMessageToServer(String message){
-        try {
-            bufferedWriter.write(message);
-            bufferedWriter.newLine();
-            bufferedWriter.flush();
+    private Socket socket;
+    private DataInputStream dataInputStream;
+    private DataOutputStream dataOutputStream;
+
+    public Client(Socket socket){
+        try{
+            this.socket = socket;
+            dataInputStream = new DataInputStream(socket.getInputStream());
+            dataOutputStream = new DataOutputStream(socket.getOutputStream());
+            System.err.println("Client is connecting to " + socket.getInetAddress() + ":" + socket.getPort());
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Error sending message to client!");
-            closeEveryConnection(socket, bufferedReader, bufferedWriter);
+            closeEverything();
         }
     }
 
-    public void receiveMessageFromServer(VBox vBox){
-        new Thread(() -> {
-            while (socket.isConnected()){
-                try {
-                    String messageFromClient = bufferedReader.readLine();
-                    ChatScreenController.addMessageToComponent(messageFromClient, vBox);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    System.out.println("Error receivieng message from client");
-                    closeEveryConnection(socket, bufferedReader, bufferedWriter);
-                    break;
+    public void sendMessage() throws IOException {
+        dataOutputStream.writeUTF("Nigger");
+
+        while (this.socket.isConnected()){
+            String temp = "Pozdrav ja sam random poruka " + Math.random();
+            dataOutputStream.writeUTF("Nigger writte: " + temp);
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void listenForMessage(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String messageFromChat;
+
+                while (socket.isConnected()){
+                    try{
+                        messageFromChat = dataInputStream.readUTF();
+                        System.out.println(messageFromChat);
+                    } catch (IOException e) {
+                        System.out.println("Error on client run method");
+                        e.printStackTrace();
+                        closeEverything();
+                    }
                 }
             }
         }).start();
     }
 
-    public void closeEveryConnection(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter){
+    private void closeEverything(){
         try {
-            if (bufferedReader != null){
-                bufferedReader.close();
+            if (dataInputStream != null){
+                dataInputStream.close();
             }
-            if (bufferedWriter != null){
-                bufferedReader.close();
+            if (dataOutputStream != null){
+                dataOutputStream.close();
             }
             if (socket != null){
                 socket.close();
             }
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
+            System.exit(-1);
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.alan.discordapp;
 
+import com.alan.businessLayer.LeaderboardManager;
 import com.alan.businessLayer.SettingsManager;
 import com.alan.models.ResolutionType;
 import com.alan.models.Settings;
@@ -16,6 +17,9 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         SettingsManager.loadSettings();
+
+
+
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 500, 500);
         stage.setTitle("Fake Discord!");
@@ -31,6 +35,6 @@ public class MainApplication extends Application {
 
     @Override
     public void stop() throws Exception {
-        SettingsManager.saveSettings(new Settings(ResolutionType.SMALL));
+        SettingsManager.saveSettings();
     }
 }

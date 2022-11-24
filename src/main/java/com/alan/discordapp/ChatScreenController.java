@@ -67,9 +67,9 @@ public class ChatScreenController implements Initializable {
                                                 BLUE_MESSAGES));
                     });
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
         // TODO: 15.10.2022. SERVER NOT WORKING
@@ -110,7 +110,6 @@ public class ChatScreenController implements Initializable {
     }
 
     public static void addMessageToComponent(String messageFromClient, VBox vBox){
-
         Platform.runLater(()
                 -> vBox.getChildren()
                 .add(prepareMessageBoxDesign(Pos.CENTER_LEFT, messageFromClient, GREY_MESSAGES)));
@@ -143,12 +142,14 @@ public class ChatScreenController implements Initializable {
             Image image = new Image(file.toURI().toString());
             HBox imageBoxDesign = prepareImageBoxDesign(image);
             vBoxMessage.getChildren().add(imageBoxDesign);
+            ConversationManager.addMessage(Message.createMessage(file, UserManager.getLoggedInUser()));
         }
     }
 
     private HBox prepareImageBoxDesign(Image image) {
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.CENTER_RIGHT);
+        hbox.setPadding(new Insets(5,5,5,10));
 
         ImageView imageView = new ImageView();
         imageView.setFitHeight(100);

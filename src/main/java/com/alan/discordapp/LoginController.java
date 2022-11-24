@@ -1,7 +1,10 @@
 package com.alan.discordapp;
 
+import com.alan.businessLayer.LeaderboardManager;
+import com.alan.businessLayer.SettingsManager;
 import com.alan.businessLayer.UserManager;
 import com.alan.models.User;
+import com.alan.utils.ResolutionChangerUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -17,9 +20,9 @@ import java.util.ResourceBundle;
 public class LoginController implements Initializable {
 
     @FXML
-    private TextField loginTexfField;
+    private TextField firstNameTextField;
     @FXML
-    private TextField passwordTextField;
+    private TextField lastNameTextField;
     @FXML
     private Label errorLabel;
 
@@ -30,7 +33,9 @@ public class LoginController implements Initializable {
 
     public  void login() throws IOException {
         // errorLabel.setVisible(true);
-        User loginUser = new User(loginTexfField.getText());
+        User loginUser = new User(firstNameTextField.getText(), lastNameTextField.getText());
+
+        LeaderboardManager.saveUserToLeaderBoard(loginUser);
 
 
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("gameScreen.fxml"));
@@ -47,8 +52,7 @@ public class LoginController implements Initializable {
         stage.setTitle("Fake Discord!");
         stage.setScene(scene);
         stage.centerOnScreen();
-        stage.setMinWidth(1200);
-        stage.setMinHeight(600);
+        ResolutionChangerUtil.changeResolution(SettingsManager.getCurrenSettings().getResolutionType());
         stage.show();
     }
 }

@@ -50,6 +50,11 @@
                   <Font size="18.0" />
                </font>
             </Button>
+            <Button fx:id="rankButton" mnemonicParsing="false" onAction="#showRankScene" prefHeight="47.0" prefWidth="154.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Ranks">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
             <Button fx:id="settingsButton" mnemonicParsing="false" onAction="#showSettingsScene" prefHeight="47.0" prefWidth="154.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Settings">
                <font>
                   <Font size="18.0" />

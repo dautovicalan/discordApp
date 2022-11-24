@@ -28,8 +28,9 @@ public class User implements Serializable {
         this.userPicture = userPicture;
     }
 
-    public User(String firstName) {
+    public User(String firstName, String lastName) {
         this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public User(String firstName, String lastName, Image userPicture) {
@@ -38,9 +39,14 @@ public class User implements Serializable {
         this.userPicture = userPicture;
     }
 
-    public static User parseFromFile(Path path) {
-        // TODO: 16.10.2022. IMPLEMENT TO END 
-        return new User("mirko");
+    public static User parseFromFile(String stringRep) {
+
+        String[] s = stringRep.split("_");
+
+        if (s.length == 0){
+            return new User("No name", "No name");
+        }
+        return new User(s[0], s[1]);
     }
 
     public String getFirstName() {
@@ -57,5 +63,14 @@ public class User implements Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public byte[] prepareForLeaderBoard() {
+        return (firstName.trim() + "_" +  lastName.trim()).getBytes();
+    }
+
+    @Override
+    public String toString() {
+        return "Ja se zovem " +  firstName + " " + lastName + System.lineSeparator();
     }
 }

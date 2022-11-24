@@ -44,7 +44,7 @@
             <Font name="Charm Regular" size="24.0" />
          </font>
         </Label>
-        <TextField fx:id="loginTexfField" promptText="First name" GridPane.columnIndex="1" GridPane.rowIndex="1">
+        <TextField fx:id="firstNameTextField" promptText="First name" GridPane.columnIndex="1" GridPane.rowIndex="1">
             <opaqueInsets>
                 <Insets />
             </opaqueInsets>
@@ -52,7 +52,7 @@
                 <Insets left="5.0" right="5.0" />
             </GridPane.margin>
         </TextField>
-        <TextField fx:id="passwordTextField" promptText="Last name" GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <TextField fx:id="lastNameTextField" promptText="Last name" GridPane.columnIndex="1" GridPane.rowIndex="2">
             <opaqueInsets>
                 <Insets />
             </opaqueInsets>
