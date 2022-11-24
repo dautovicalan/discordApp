@@ -18,7 +18,7 @@ public class Server {
         try (ServerSocket serverSocket = new ServerSocket(PORT)){
             System.err.println("Server listening on port: " + serverSocket.getLocalPort());
 
-            while (true) {
+            while (!serverSocket.isClosed()) {
                 Socket clientSocket = serverSocket.accept();
                 System.err.println("Client connected from port: " + clientSocket.getPort());
                 ClientHandler clientHandler = new ClientHandler(clientSocket);

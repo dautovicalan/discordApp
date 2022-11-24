@@ -3,6 +3,7 @@ package com.alan.discordapp;
 import com.alan.businessLayer.LeaderboardManager;
 import com.alan.businessLayer.SettingsManager;
 import com.alan.businessLayer.UserManager;
+import com.alan.models.Client;
 import com.alan.models.User;
 import com.alan.utils.ResolutionChangerUtil;
 import javafx.fxml.FXML;

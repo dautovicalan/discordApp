@@ -5,17 +5,21 @@ import javafx.scene.image.Image;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import java.io.Serializable;
+import java.io.*;
 import java.nio.file.Path;
 import java.util.UUID;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-public class User implements Serializable {
+public class User implements Serializable, Externalizable {
+
+    private static final long serialVersionUID = 5L;
 
     private final String DEL = "|";
-    @XmlElement(name = "firstName")
+
+    public User(){
+    }
+
+    private long userId;
     private String firstName;
-    @XmlElement(name = "lastName")
     private String lastName;
 
     private Image userPicture;
@@ -29,11 +33,13 @@ public class User implements Serializable {
     }
 
     public User(String firstName, String lastName) {
+        this.userId = ProcessHandle.current().pid();
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
     public User(String firstName, String lastName, Image userPicture) {
+        this.userId = ProcessHandle.current().pid();
         this.firstName = firstName;
         this.lastName = lastName;
         this.userPicture = userPicture;
@@ -53,6 +59,8 @@ public class User implements Serializable {
         return firstName;
     }
 
+    public long getUserId(){ return userId; }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -71,6 +79,20 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "Ja se zovem " +  firstName + " " + lastName + System.lineSeparator();
+        return firstName + " " + lastName;
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeLong(userId);
+        out.writeUTF(firstName);
+        out.writeUTF(lastName);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        userId = in.readLong();
+        firstName = in.readUTF();
+        lastName = in.readUTF();
     }
 }

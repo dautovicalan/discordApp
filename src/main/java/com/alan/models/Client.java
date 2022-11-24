@@ -1,62 +1,52 @@
 package com.alan.models;
 
+import com.alan.discordapp.ChatScreenController;
 import com.alan.discordapp.Server;
+import javafx.scene.layout.VBox;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class Client {
 
-    public static void main(String[] args) throws IOException {
-        Socket socket1 = new Socket(Server.HOST, Server.PORT);
-        Client client = new Client(socket1);
-        client.sendMessage();
-        client.listenForMessage();
-
-    }
-
     private Socket socket;
-    private DataInputStream dataInputStream;
-    private DataOutputStream dataOutputStream;
+    private ObjectInputStream dataInputStream;
+    private ObjectOutputStream dataOutputStream;
+    private User user;
 
-    public Client(Socket socket){
+    public Client(User user){
         try{
-            this.socket = socket;
-            dataInputStream = new DataInputStream(socket.getInputStream());
-            dataOutputStream = new DataOutputStream(socket.getOutputStream());
+            this.socket = new Socket(Server.HOST, Server.PORT);
+            this.user = user;
+            dataOutputStream = new ObjectOutputStream(socket.getOutputStream());
+            dataInputStream = new ObjectInputStream(socket.getInputStream());
             System.err.println("Client is connecting to " + socket.getInetAddress() + ":" + socket.getPort());
+            dataOutputStream.writeObject(user);
         } catch (IOException e) {
             e.printStackTrace();
             closeEverything();
         }
     }
 
-    public void sendMessage() throws IOException {
-        dataOutputStream.writeUTF("Nigger");
-
-        while (this.socket.isConnected()){
-            String temp = "Pozdrav ja sam random poruka " + Math.random();
-            dataOutputStream.writeUTF("Nigger writte: " + temp);
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+    public void sendMessage(Message message) throws IOException {
+        // just testing with if, because while infinite loop
+        if (this.socket.isConnected()){
+            dataOutputStream.writeObject(message);
         }
     }
 
-    public void listenForMessage(){
+    public void listenForMessage(VBox vBoxMessage){
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String messageFromChat;
+                Message messageFromChat;
 
                 while (socket.isConnected()){
                     try{
-                        messageFromChat = dataInputStream.readUTF();
-                        System.out.println(messageFromChat);
-                    } catch (IOException e) {
+                        messageFromChat = (Message) dataInputStream.readObject();
+                        System.out.println(messageFromChat.getMessageContent());
+                        ChatScreenController.addMessageToComponent(messageFromChat.getMessageContent(), vBoxMessage);
+                    } catch (Exception e) {
                         System.out.println("Error on client run method");
                         e.printStackTrace();
                         closeEverything();

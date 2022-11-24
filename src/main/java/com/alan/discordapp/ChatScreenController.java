@@ -2,8 +2,10 @@ package com.alan.discordapp;
 
 import com.alan.businessLayer.ConversationManager;
 import com.alan.businessLayer.UserManager;
+import com.alan.models.Client;
 import com.alan.models.Message;
 import com.alan.models.Server;
+import com.alan.models.User;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -57,6 +59,7 @@ public class ChatScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        Client client = new Client(UserManager.getLoggedInUser());
 
         try {
             ConversationManager.loadConversation()
@@ -66,19 +69,16 @@ public class ChatScreenController implements Initializable {
                                                 msg.getMessageContent(),
                                                 BLUE_MESSAGES));
                     });
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // TODO: 15.10.2022. SERVER NOT WORKING
-        //server = new Server(new ServerSocket(1234));
 
         vBoxMessage.heightProperty().addListener((observableValue, number, newValue)
                 -> scrollPaneMain.setVvalue((Double) newValue));
 
-        //server.receiveMessageFromClient(vBoxMessage);
+
+        client.listenForMessage(vBoxMessage);
 
         sendButton.setOnAction(actionEvent -> {
             String messageToSend = textField.getText();
@@ -86,12 +86,14 @@ public class ChatScreenController implements Initializable {
                 vBoxMessage.getChildren()
                         .add(prepareMessageBoxDesign(Pos.CENTER_RIGHT, messageToSend, BLUE_MESSAGES));
 
-                //server.sendMessageToClient(messageToSend);
+                try {
+                    client.sendMessage(Message.createMessage(messageToSend, UserManager.getLoggedInUser()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 textField.clear();
 
-                addMessageToComponent("Ja sam odgovor na svako pitanje", vBoxMessage);
-                saveConversation();
                 ConversationManager.addMessage(Message.createMessage(messageToSend,
                         UserManager.getLoggedInUser()));
             }
@@ -102,7 +104,7 @@ public class ChatScreenController implements Initializable {
                 ConversationManager.saveConversation();
             } catch (JAXBException e) {
                 e.printStackTrace();
-                System.out.println("Cannot save this convo, contact support xd");
+                System.out.println("Cannot save this convo, contact support");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -159,24 +161,6 @@ public class ChatScreenController implements Initializable {
         hbox.getChildren().add(imageView);
 
         return hbox;
-    }
-
-    private void saveConversation(){
-        ObservableList<Node> conversation = vBoxMessage.getChildren();
-        conversation.forEach(node -> {
-            HBox hBox = (HBox) node;
-            ObservableList<Node> childrenHbox = hBox.getChildren();
-            childrenHbox.forEach(x -> {
-                if (x instanceof TextFlow){
-                    ObservableList<Node> childrenTextFlow = ((TextFlow) x).getChildren();
-                    childrenTextFlow.forEach(y -> {
-                        if (y instanceof Text){
-                            System.out.println(((Text)y).getText());
-                        }
-                    });
-                }
-            });
-        });
     }
 
 }

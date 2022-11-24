@@ -2,17 +2,16 @@ package com.alan.models;
 
 import com.alan.models.User;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import java.io.File;
-import java.io.Serializable;
+import java.io.*;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-public class Message implements Serializable {
-    @XmlElement(name = "messageContent")
+public class Message implements Serializable, Externalizable {
+
+    private static final long serialVersionUID = 5L;
+
+    public Message(){
+    }
+
     private String messageContent;
-    @XmlElement(name = "messageSender")
     private User messageSender;
 
     public String getMessageContent() {
@@ -56,5 +55,17 @@ public class Message implements Serializable {
 
     public static Message createMessage(File sentFile, User messageSender){
         return new Message(sentFile, messageSender);
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeUTF(messageContent);
+        out.writeObject(messageSender);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        messageContent = in.readUTF();
+        messageSender = (User) in.readObject();
     }
 }
