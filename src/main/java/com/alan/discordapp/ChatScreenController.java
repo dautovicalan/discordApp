@@ -164,33 +164,4 @@ public class ChatScreenController implements Initializable {
         return hBox;
     }
 
-    private final FileChooser fileChooser = new FileChooser();
-    public void sendPicture(){
-        fileChooser.setTitle("Select Picture to Send");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Image Files", "*.png", "*jpg"));
-        File file = fileChooser.showOpenDialog(null);
-        if (file != null){
-            Image image = new Image(file.toURI().toString());
-            HBox imageBoxDesign = prepareImageBoxDesign(image);
-            vBoxMessage.getChildren().add(imageBoxDesign);
-            ConversationManager.addMessage(Message.createMessage(file, UserManager.getLoggedInUser()));
-        }
-    }
-
-    private HBox prepareImageBoxDesign(Image image) {
-        HBox hbox = new HBox();
-        hbox.setAlignment(Pos.CENTER_RIGHT);
-        hbox.setPadding(new Insets(5,5,5,10));
-
-        ImageView imageView = new ImageView();
-        imageView.setFitHeight(100);
-        imageView.setFitWidth(100);
-        imageView.setImage(image);
-
-        hbox.getChildren().add(imageView);
-
-        return hbox;
-    }
-
 }

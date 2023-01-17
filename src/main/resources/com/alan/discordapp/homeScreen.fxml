@@ -20,6 +20,11 @@
                      <font>
                         <Font size="14.0" />
                      </font></Button>
+                  <Button fx:id="sendPictureButton" mnemonicParsing="false" onAction="#showSendPictureScene" prefHeight="26.0" prefWidth="126.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Send Picture">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
                </children>
             </VBox>
          </left>

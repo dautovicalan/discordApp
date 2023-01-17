@@ -5,7 +5,10 @@ module com.alan.discordapp {
     requires java.xml;
     requires javafx.media;
     requires java.desktop;
+    requires java.rmi;
+    requires java.naming;
 
     opens com.alan.discordapp to javafx.fxml;
+    exports com.alan.rmi;
     exports com.alan.discordapp;
 }

@@ -22,6 +22,9 @@ public class HomeScreenController implements Initializable {
     @FXML
     private Button chatButton;
 
+    @FXML
+    private Button sendPictureButton;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -40,6 +43,15 @@ public class HomeScreenController implements Initializable {
         try{
             AnchorPane voiceView = FXMLLoader.load(getClass().getResource("voiceScreen.fxml"));
             mainPane.setCenter(voiceView);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void showSendPictureScene(){
+        try {
+            AnchorPane sendPictureView = FXMLLoader.load(getClass().getResource("sendPictureScreen.fxml"));
+            mainPane.setCenter(sendPictureView);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

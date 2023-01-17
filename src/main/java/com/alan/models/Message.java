@@ -53,7 +53,7 @@ public class Message implements Serializable, Externalizable {
         return new Message(messageContent, messageSender);
     }
 
-    public static Message createMessage(File sentFile, User messageSender){
+    public static Message createPictureMessage(File sentFile, User messageSender){
         return new Message(sentFile, messageSender);
     }
 
