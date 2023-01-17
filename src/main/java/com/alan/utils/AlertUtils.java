@@ -5,7 +5,6 @@ import javafx.scene.control.Alert;
 public class AlertUtils {
 
     private AlertUtils(){
-
     }
 
     public static void showInfoMessage(String message){

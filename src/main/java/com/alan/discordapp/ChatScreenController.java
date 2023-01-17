@@ -54,31 +54,30 @@ public class ChatScreenController implements Initializable {
     private VBox vBoxMessage;
     @FXML
     private ScrollPane scrollPaneMain;
+    @FXML
+    private ScrollPane scrollPaneOnlineUsers;
+    @FXML
+    private VBox vBoxOnlineUsers;
 
-    private Server server;
+    private Client client;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        Client client = new Client(UserManager.getLoggedInUser());
-
-        try {
-            ConversationManager.loadConversation()
-                    .getAllMessages().forEach(msg -> {
-                        vBoxMessage.getChildren()
-                                        .add(prepareMessageBoxDesign(Pos.CENTER_RIGHT,
-                                                msg.getMessageContent(),
-                                                BLUE_MESSAGES));
-                    });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        vBoxMessage.heightProperty().addListener((observableValue, number, newValue)
-                -> scrollPaneMain.setVvalue((Double) newValue));
-
+        client = new Client(UserManager.getLoggedInUser());
+        loadConversations();
+        initListeners();
 
         client.listenForMessage(vBoxMessage);
+        // vBoxOnlineUsers.getChildren().add(prepareOnlineUserBoxDesign(Pos.CENTER, new User("Alan", "Dautovic")));
+        client.listenForNewOnlineUsers(vBoxOnlineUsers);
+
+
+    }
+
+    private void initListeners() {
+        vBoxMessage.heightProperty().addListener((observableValue, number, newValue)
+                -> scrollPaneMain.setVvalue((Double) newValue));
 
         sendButton.setOnAction(actionEvent -> {
             String messageToSend = textField.getText();
@@ -86,35 +85,66 @@ public class ChatScreenController implements Initializable {
                 vBoxMessage.getChildren()
                         .add(prepareMessageBoxDesign(Pos.CENTER_RIGHT, messageToSend, BLUE_MESSAGES));
 
+                Message message = Message.createMessage(messageToSend, UserManager.getLoggedInUser());
                 try {
-                    client.sendMessage(Message.createMessage(messageToSend, UserManager.getLoggedInUser()));
+                    client.sendMessage(message);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
                 textField.clear();
 
-                ConversationManager.addMessage(Message.createMessage(messageToSend,
-                        UserManager.getLoggedInUser()));
+                ConversationManager.addMessage(message);
             }
         });
 
         saveConvoButton.setOnAction(actionEvent -> {
             try {
                 ConversationManager.saveConversation();
-            } catch (JAXBException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Cannot save this convo, contact support");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
         });
+    }
+
+    private void loadConversations() {
+        try {
+            ConversationManager.loadConversation()
+                    .getAllMessages().forEach(msg -> {
+                        vBoxMessage.getChildren()
+                                .add(prepareMessageBoxDesign(Pos.CENTER_RIGHT,
+                                        msg.getMessageContent(),
+                                        BLUE_MESSAGES));
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void addMessageToComponent(String messageFromClient, VBox vBox){
         Platform.runLater(()
                 -> vBox.getChildren()
                 .add(prepareMessageBoxDesign(Pos.CENTER_LEFT, messageFromClient, GREY_MESSAGES)));
+    }
+
+    public static void addOnlineUserToComponent(User user, VBox vBox){
+        Platform.runLater(() -> {
+            vBox.getChildren().add(prepareOnlineUserBoxDesign(Pos.CENTER, user));
+        });
+    }
+
+    private static HBox prepareOnlineUserBoxDesign(Pos center, User user) {
+        HBox hBox = new HBox();
+        hBox.setPadding(new Insets(10, 10, 10, 10));
+        Text text = new Text(user.getFirstName() + " " + user.getLastName());
+        TextFlow textFlow = new TextFlow(text);
+        textFlow.setPadding(new Insets(10, 10, 10, 10));
+
+        textFlow.setStyle(BLUE_MESSAGES);
+
+        hBox.getChildren().add(textFlow);
+        return hBox;
     }
 
     private static HBox prepareMessageBoxDesign(Pos position, String message, String design){

@@ -29,7 +29,6 @@ public class Client {
     }
 
     public void sendMessage(Message message) throws IOException {
-        // just testing with if, because while infinite loop
         if (this.socket.isConnected()){
             dataOutputStream.writeObject(message);
         }
@@ -71,5 +70,29 @@ public class Client {
             e.printStackTrace();
             System.exit(-1);
         }
+    }
+
+    public void listenForNewOnlineUsers(VBox vBoxOnlineUsers) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                User newConnectedUser;
+                while(socket.isConnected()){
+                    try {
+                        Object tempObject = dataInputStream.readObject();
+                        if (tempObject instanceof User){
+                            newConnectedUser = (User) tempObject;
+                            ChatScreenController.addOnlineUserToComponent(newConnectedUser, vBoxOnlineUsers);
+                            System.out.println("Client model: " + newConnectedUser);
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Error on listen for new online users");
+                        e.printStackTrace();
+                        closeEverything();
+                        break;
+                    }
+                }
+            }
+        });
     }
 }
