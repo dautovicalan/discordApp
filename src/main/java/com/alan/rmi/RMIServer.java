@@ -12,19 +12,14 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class RMIServer {
 
-    private static final String PROVIDER_URL = "file:d:/";
-
-    private static final String CONFIGURATION_FILE_NAME = "conf.properties";
-
     private static final String RMI_PORT_KEY = "rmi.port";
-
     private static final int RANDOM_PORT_HINT = 0;
     private static final int RMI_PORT = 2000;
 
 
     public static void main(String[] args) {
         try {
-            //String rmiPortString = JndiHelper.getValueFromConfiguration(RMI_PORT_KEY);
+            String rmiPortString = JndiHelper.getValueFromConfiguration(RMI_PORT_KEY);
             //Creating picture service object
             PictureServiceImpl pictureServiceImpl = new PictureServiceImpl();
 
@@ -35,15 +30,17 @@ public class RMIServer {
             //the reference of those exported objects
 
             //Get the registry to register objects
-            Registry registry = LocateRegistry.createRegistry(RMI_PORT);
+            Registry registry = LocateRegistry.createRegistry(Integer.parseInt(rmiPortString));
 
             registry.rebind("test", pictureService);
 
-            System.err.println("RMI Server Ready");
+            System.err.println("RMI Server Ready on Port: " + rmiPortString);
 
         } catch (RemoteException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (NamingException e) {
             throw new RuntimeException(e);
         }
     }

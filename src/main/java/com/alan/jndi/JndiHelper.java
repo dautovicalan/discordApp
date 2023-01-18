@@ -9,9 +9,8 @@ import java.util.Properties;
 
 
 public class JndiHelper {
-    private static final String PROVIDER_URL = "file:d:/";
+    private static final String PROVIDER_URL = "file:/Users/alandautovic/Development/Uni_Projects/discordApp";
     private static InitialContext initialContext;
-
     private static final String CONFIGURATION_FILE_NAME = "conf.properties";
 
     private static InitialContext getInitialContext() throws NamingException {

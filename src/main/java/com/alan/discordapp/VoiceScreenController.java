@@ -64,7 +64,6 @@ public class VoiceScreenController implements Initializable {
         if (!isRecording){
             AudioFormat format = buildAudioFormatInstance();
 
-            javaSoundRecorder = new JavaSoundRecorder();
             javaSoundRecorder.build(format);
 
             System.out.println("Start recording ....");
@@ -75,13 +74,12 @@ public class VoiceScreenController implements Initializable {
 
         } else {
             javaSoundRecorder.stop();
-            File savedFile = WaveDataUtils.saveToFile("/SoundClip", AudioFileFormat.Type.WAVE, javaSoundRecorder.getAudioInputStream());
+            File savedFile = WaveDataUtils.saveToFile("myVoiceRecording", AudioFileFormat.Type.WAVE, javaSoundRecorder.getAudioInputStream());
             lwVoiceMessages.getItems().add(savedFile);
 
             recordVoiceMessage.setText("Start recording");
             isRecording = false;
         }
-
     }
 
     private AudioFormat buildAudioFormatInstance() {

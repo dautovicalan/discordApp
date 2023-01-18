@@ -1,14 +1,32 @@
 package com.alan.discordapp;
 
 import com.alan.businessLayer.ClientHandler;
+import com.alan.jndi.JndiHelper;
 
+import javax.naming.NamingException;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
-    public static final String HOST = "localhost";
-    public static final int PORT = 1989;
+
+    private static final String SERVER_HOST_KEY = "server.host";
+    private static final String SERVER_PORT_KEY = "server.port";
+    public static final String HOST;
+    public static final int PORT;
+
+    static {
+        try {
+            HOST = JndiHelper.getValueFromConfiguration(SERVER_HOST_KEY);
+            PORT = Integer.parseInt(JndiHelper.getValueFromConfiguration(SERVER_PORT_KEY));
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
     public static void main(String[] args) {
         acceptRequests();
