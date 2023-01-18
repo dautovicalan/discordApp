@@ -1,5 +1,6 @@
 package com.alan.rmi;
 
+import com.alan.models.ImageMessage;
 import com.alan.models.Message;
 import com.alan.models.User;
 
@@ -11,6 +12,6 @@ import java.util.Map;
 
 public interface PictureService extends Remote {
 
-    void sendPicture(Message message) throws RemoteException;
-    List<Message> receiveAllSentPictures() throws RemoteException;
+    void sendPicture(ImageMessage message) throws RemoteException;
+    List<ImageMessage> receiveAllSentPictures() throws RemoteException;
 }

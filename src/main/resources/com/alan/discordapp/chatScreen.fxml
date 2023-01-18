@@ -14,10 +14,9 @@
             <VBox fx:id="vBoxMessage" prefHeight="225.0" prefWidth="388.0" style="-fx-border-radius: 10 10 10 10;" />
          </content>
       </ScrollPane>
-      <TextField fx:id="textField" layoutX="179.0" layoutY="335.0" prefHeight="26.0" prefWidth="200.0" promptText="Enter message here..." />
+      <TextField fx:id="textField" layoutX="179.0" layoutY="335.0" prefHeight="26.0" prefWidth="298.0" promptText="Enter message here..." />
       <Button fx:id="sendButton" layoutX="502.0" layoutY="335.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="115.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Send" />
       <Button fx:id="saveConvoButton" layoutX="491.0" layoutY="48.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="137.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Save Convo" />
-      <Button fx:id="sendPicture" layoutX="393.0" layoutY="336.0" mnemonicParsing="false" onAction="#sendPicture" prefHeight="26.0" prefWidth="102.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Open Picture" />
       <ScrollPane fx:id="scrollPaneOnlineUsers" layoutX="14.0" layoutY="86.0" prefHeight="229.0" prefWidth="128.0">
          <content>
             <VBox fx:id="vBoxOnlineUsers" prefHeight="226.0" prefWidth="127.0" />

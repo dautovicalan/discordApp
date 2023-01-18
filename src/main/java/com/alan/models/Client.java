@@ -3,6 +3,7 @@ package com.alan.models;
 import com.alan.discordapp.ChatScreenController;
 import com.alan.discordapp.Server;
 import javafx.scene.layout.VBox;
+import org.w3c.dom.Text;
 
 import java.io.*;
 import java.net.Socket;
@@ -28,7 +29,7 @@ public class Client {
         }
     }
 
-    public void sendMessage(Message message) throws IOException {
+    public void sendMessage(TextMessage message) throws IOException {
         if (this.socket.isConnected()){
             dataOutputStream.writeObject(message);
         }
@@ -38,11 +39,11 @@ public class Client {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Message messageFromChat;
+                TextMessage messageFromChat;
 
                 while (socket.isConnected()){
                     try{
-                        messageFromChat = (Message) dataInputStream.readObject();
+                        messageFromChat = (TextMessage) dataInputStream.readObject();
                         System.out.println(messageFromChat.getMessageContent());
                         ChatScreenController.addMessageToComponent(messageFromChat.getMessageContent(), vBoxMessage);
                     } catch (Exception e) {

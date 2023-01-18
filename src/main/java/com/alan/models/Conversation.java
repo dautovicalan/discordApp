@@ -10,17 +10,17 @@ import java.util.List;
 public class Conversation implements Serializable {
     @XmlElementWrapper
     @XmlElement(name = "messages")
-    private List<Message> allMessages;
+    private List<TextMessage> allMessages;
 
     public Conversation() {
         this.allMessages = new ArrayList<>();
     }
 
-    public List<Message> getAllMessages() {
+    public List<TextMessage> getAllMessages() {
         return allMessages;
     }
 
-    public void setAllMessages(List<Message> allMessages) {
+    public void setAllMessages(List<TextMessage> allMessages) {
         this.allMessages = allMessages;
     }
 }

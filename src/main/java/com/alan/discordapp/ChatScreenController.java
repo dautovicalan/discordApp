@@ -2,35 +2,20 @@ package com.alan.discordapp;
 
 import com.alan.businessLayer.ConversationManager;
 import com.alan.businessLayer.UserManager;
-import com.alan.models.Client;
-import com.alan.models.Message;
-import com.alan.models.Server;
-import com.alan.models.User;
+import com.alan.models.*;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.effect.ImageInput;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.stage.FileChooser;
-
-import javax.xml.bind.JAXBException;
-import java.io.File;
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.lang.Object;
 
 public class ChatScreenController implements Initializable {
 
@@ -43,9 +28,6 @@ public class ChatScreenController implements Initializable {
 
     @FXML
     private TextField textField;
-
-    @FXML
-    private Button sendPicture;
     @FXML
     private Button sendButton;
     @FXML
@@ -65,12 +47,11 @@ public class ChatScreenController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         client = new Client(UserManager.getLoggedInUser());
-        loadConversations();
         initListeners();
 
         client.listenForMessage(vBoxMessage);
         // vBoxOnlineUsers.getChildren().add(prepareOnlineUserBoxDesign(Pos.CENTER, new User("Alan", "Dautovic")));
-        client.listenForNewOnlineUsers(vBoxOnlineUsers);
+        //client.listenForNewOnlineUsers(vBoxOnlineUsers);
 
 
     }
@@ -85,7 +66,7 @@ public class ChatScreenController implements Initializable {
                 vBoxMessage.getChildren()
                         .add(prepareMessageBoxDesign(Pos.CENTER_RIGHT, messageToSend, BLUE_MESSAGES));
 
-                Message message = Message.createMessage(messageToSend, UserManager.getLoggedInUser());
+                TextMessage message = new TextMessage(UserManager.getLoggedInUser(), messageToSend);
                 try {
                     client.sendMessage(message);
                 } catch (IOException e) {
@@ -106,20 +87,6 @@ public class ChatScreenController implements Initializable {
                 System.out.println("Cannot save this convo, contact support");
             }
         });
-    }
-
-    private void loadConversations() {
-        try {
-            ConversationManager.loadConversation()
-                    .getAllMessages().forEach(msg -> {
-                        vBoxMessage.getChildren()
-                                .add(prepareMessageBoxDesign(Pos.CENTER_RIGHT,
-                                        msg.getMessageContent(),
-                                        BLUE_MESSAGES));
-                    });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public static void addMessageToComponent(String messageFromClient, VBox vBox){

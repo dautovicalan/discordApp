@@ -1,6 +1,7 @@
 package com.alan.businessLayer;
 
 import com.alan.models.Message;
+import com.alan.models.TextMessage;
 import com.alan.models.User;
 
 import java.io.*;
@@ -27,7 +28,7 @@ public class ClientHandler implements Runnable{
    clientHandlers.add(this);
 
    System.out.println(user + " connected to the chat");
-   broadcastNewConnectedClient(this.user);
+   //broadcastNewConnectedClient(this.user);
 
   } catch (Exception e) {
    e.printStackTrace();
@@ -37,11 +38,11 @@ public class ClientHandler implements Runnable{
 
  @Override
  public void run() {
-  Message messageFromClient;
+  TextMessage messageFromClient;
 
   while (socket.isConnected()){
    try {
-    messageFromClient = (Message) dataInputStream.readObject();
+    messageFromClient = (TextMessage) dataInputStream.readObject();
     System.out.println(messageFromClient.getMessageSender() + ": " +  messageFromClient.getMessageContent());
     broadcastMessage(messageFromClient);
    } catch (Exception e) {
@@ -65,7 +66,7 @@ public class ClientHandler implements Runnable{
   }
  }
 
- public void broadcastMessage(Message message){
+ public void broadcastMessage(TextMessage message){
   for (ClientHandler clientHandler : clientHandlers){
    try {
     if (clientHandler.user.getUserId() != user.getUserId()){

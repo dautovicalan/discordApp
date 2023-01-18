@@ -2,6 +2,7 @@ package com.alan.businessLayer;
 
 import com.alan.models.Conversation;
 import com.alan.models.Message;
+import com.alan.models.TextMessage;
 
 import javax.xml.bind.JAXBException;
 import java.io.*;
@@ -12,7 +13,7 @@ public class ConversationManager {
     }
     private static Conversation conversation = new Conversation();
 
-    public static void addMessage(Message message) {
+    public static void addMessage(TextMessage message) {
         conversation.getAllMessages().add(message);
     }
 
@@ -39,12 +40,7 @@ public class ConversationManager {
         AtomicInteger textCounter = new AtomicInteger(0);
         AtomicInteger imageCounter = new AtomicInteger(0);
         conversation.getAllMessages().forEach(message -> {
-            if (message.getSentFile() != null){
-                imageCounter.getAndIncrement();
-            }
-            if (message.getMessageContent() != null){
-                textCounter.getAndIncrement();
-            }
+
         });
 
 

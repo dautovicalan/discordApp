@@ -4,6 +4,7 @@ import com.alan.businessLayer.UserManager;
 import com.alan.models.User;
 import com.alan.utils.AlertUtils;
 import com.alan.utils.JavaSoundRecorder;
+import com.alan.utils.WaveDataUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -11,6 +12,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.media.AudioClip;
 import javafx.stage.FileChooser;
 
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -56,22 +59,39 @@ public class VoiceScreenController implements Initializable {
         User loggedInUser = UserManager.getLoggedInUser();
     }
 
+    private JavaSoundRecorder javaSoundRecorder = new JavaSoundRecorder();
     public void recordVoiceMessage(){
-        JavaSoundRecorder javaSoundRecorder = new JavaSoundRecorder();
         if (!isRecording){
-            Thread thread = new Thread(javaSoundRecorder);
-            thread.start();
+            AudioFormat format = buildAudioFormatInstance();
 
-            recordVoiceMessage.setText("Stop recording");
+            javaSoundRecorder = new JavaSoundRecorder();
+            javaSoundRecorder.build(format);
+
+            System.out.println("Start recording ....");
+            javaSoundRecorder.start();
+
             isRecording = true;
+            recordVoiceMessage.setText("Stop recording");
+
         } else {
-            javaSoundRecorder.finish();
-            javaSoundRecorder.cancel();
+            javaSoundRecorder.stop();
+            File savedFile = WaveDataUtils.saveToFile("/SoundClip", AudioFileFormat.Type.WAVE, javaSoundRecorder.getAudioInputStream());
+            lwVoiceMessages.getItems().add(savedFile);
 
             recordVoiceMessage.setText("Start recording");
             isRecording = false;
         }
 
+    }
+
+    private AudioFormat buildAudioFormatInstance() {
+        AudioFormat.Encoding encoding = AudioFormat.Encoding.PCM_SIGNED;
+        float rate = 44100.0f;
+        int channels = 1;
+        int sampleSize = 16;
+        boolean bigEndian = true;
+
+        return new AudioFormat(encoding, rate, sampleSize, channels, (sampleSize / 8) * channels, rate, bigEndian);
     }
 
     public void playVoiceMessage(){
