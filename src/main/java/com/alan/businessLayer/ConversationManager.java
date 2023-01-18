@@ -27,6 +27,10 @@ public class ConversationManager {
         }
     }
 
+    public static Conversation getConversation(){
+        return conversation;
+    }
+
     public static Conversation loadConversation() throws IOException, ClassNotFoundException {
         try(ObjectInputStream deserialzer = new ObjectInputStream(new FileInputStream("savedMessages.ser"))){
             conversation = (Conversation) deserialzer.readObject();
@@ -46,8 +50,6 @@ public class ConversationManager {
 
         stringBuilder.append("Your stats: \n");
         stringBuilder.append("Messages sent: " + (imageCounter.get() + textCounter.get()) + "\n");
-        stringBuilder.append("Images part: " + imageCounter.get() + "\n");
-        stringBuilder.append("Real messages: " + textCounter.get() + "\n");
 
         return stringBuilder.toString();
     }

@@ -35,7 +35,7 @@ public class LoginController implements Initializable {
     public  void login() throws IOException {
         // errorLabel.setVisible(true);
         User loginUser = new User(firstNameTextField.getText(), lastNameTextField.getText());
-
+        UserManager.setLoggedInUser(loginUser);
         LeaderboardManager.saveUserToLeaderBoard(loginUser);
 
 
@@ -48,7 +48,6 @@ public class LoginController implements Initializable {
             throw new RuntimeException(e);
         }
 
-        UserManager.setLoggedInUser(loginUser);
         Stage stage = MainApplication.getMainStage();
         stage.setTitle("Fake Discord!");
         stage.setScene(scene);
