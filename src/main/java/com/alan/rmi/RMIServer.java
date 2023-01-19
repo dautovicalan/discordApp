@@ -32,7 +32,7 @@ public class RMIServer {
             //Get the registry to register objects
             Registry registry = LocateRegistry.createRegistry(Integer.parseInt(rmiPortString));
 
-            registry.rebind("test", pictureService);
+            registry.rebind("pictureService", pictureService);
 
             System.err.println("RMI Server Ready on Port: " + rmiPortString);
 

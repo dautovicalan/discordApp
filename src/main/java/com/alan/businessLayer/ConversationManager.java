@@ -41,15 +41,8 @@ public class ConversationManager {
     public static String getStatistic(){
         StringBuilder stringBuilder = new StringBuilder();
 
-        AtomicInteger textCounter = new AtomicInteger(0);
-        AtomicInteger imageCounter = new AtomicInteger(0);
-        conversation.getAllMessages().forEach(message -> {
-
-        });
-
-
         stringBuilder.append("Your stats: \n");
-        stringBuilder.append("Messages sent: " + (imageCounter.get() + textCounter.get()) + "\n");
+        stringBuilder.append("Messages sent: " + conversation.getAllMessages().size());
 
         return stringBuilder.toString();
     }

@@ -6,16 +6,25 @@ import com.alan.businessLayer.UserManager;
 import com.alan.models.Client;
 import com.alan.models.User;
 import com.alan.utils.ResolutionChangerUtil;
+import com.alan.utils.XMLUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
@@ -32,13 +41,25 @@ public class LoginController implements Initializable {
 
     }
 
-    public  void login() throws IOException {
-        // errorLabel.setVisible(true);
+    public void login() throws IOException {
+
+        if (firstNameTextField.getText().trim().isBlank() || lastNameTextField.getText().trim().isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Logging In");
+            alert.setContentText("Please fill all information to log in");
+            alert.show();
+            return;
+        }
+
         User loginUser = new User(firstNameTextField.getText(), lastNameTextField.getText());
         UserManager.setLoggedInUser(loginUser);
         LeaderboardManager.saveUserToLeaderBoard(loginUser);
 
 
+        loadMainApplication();
+    }
+
+    private void loadMainApplication() {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("gameScreen.fxml"));
 
         Scene scene = null;

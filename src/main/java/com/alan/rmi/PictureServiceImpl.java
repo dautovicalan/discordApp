@@ -1,15 +1,15 @@
 package com.alan.rmi;
 
+import com.alan.discordapp.SendPictureScreenController;
 import com.alan.models.ImageMessage;
-import com.alan.models.Message;
-import com.alan.models.User;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.scene.layout.VBox;
 
-import java.io.File;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class PictureServiceImpl implements PictureService{
 

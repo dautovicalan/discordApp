@@ -19,6 +19,12 @@ public class UserManager {
 
     public static User getLoggedInUser() { return loggedInUser; }
 
+    public static void logout(){
+        if (loggedInUser != null) {
+            loggedInUser = null;
+        }
+    }
+
     public static void saveUser(){
 
     }

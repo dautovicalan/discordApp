@@ -1,6 +1,7 @@
 package com.alan.models;
 
 import java.io.*;
+import java.time.LocalDateTime;
 
 public class TextMessage implements Serializable, Externalizable {
 
@@ -8,6 +9,12 @@ public class TextMessage implements Serializable, Externalizable {
     private User messageSender;
 
     public TextMessage() {
+    }
+
+    public TextMessage(String messageContent, LocalDateTime createdOn, User messageSender) {
+        this.messageContent = messageContent;
+        this.createdOn = createdOn;
+        this.messageSender = messageSender;
     }
 
     public User getMessageSender() {
@@ -18,9 +25,15 @@ public class TextMessage implements Serializable, Externalizable {
         this.messageSender = messageSender;
     }
 
+    private LocalDateTime createdOn;
     public TextMessage(User messageSender, String messageContent) {
+        this.createdOn = LocalDateTime.now();
         this.messageSender = messageSender;
         this.messageContent = messageContent;
+    }
+
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
     }
 
     public String getMessageContent() {

@@ -7,6 +7,7 @@ import java.rmi.registry.Registry;
 
 public class RMIClient {
 
+    // TESTING INIT VERSION OF RMI CLIENT
     public static void main(String[] args) throws RemoteException, NotBoundException {
 
         try {

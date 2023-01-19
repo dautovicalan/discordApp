@@ -1,10 +1,7 @@
 package com.alan.utils;
 
-import javafx.concurrent.Task;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.*;
 
@@ -17,10 +14,6 @@ public class JavaSoundRecorder implements Runnable {
 
     public JavaSoundRecorder(){
         super();
-    }
-
-    public JavaSoundRecorder(AudioFormat format){
-        this.format = format;
     }
 
     public JavaSoundRecorder build(AudioFormat format){

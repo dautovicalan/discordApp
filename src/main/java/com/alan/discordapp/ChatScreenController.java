@@ -67,6 +67,7 @@ public class ChatScreenController implements Initializable {
                         .add(prepareMessageBoxDesign(Pos.CENTER_RIGHT, messageToSend, BLUE_MESSAGES));
 
                 TextMessage message = new TextMessage(UserManager.getLoggedInUser(), messageToSend);
+                ConversationManager.addMessage(message);
                 try {
                     client.sendMessage(message);
                 } catch (IOException e) {
@@ -74,17 +75,6 @@ public class ChatScreenController implements Initializable {
                 }
 
                 textField.clear();
-
-                ConversationManager.addMessage(message);
-            }
-        });
-
-        saveConvoButton.setOnAction(actionEvent -> {
-            try {
-                ConversationManager.saveConversation();
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Cannot save this convo, contact support");
             }
         });
     }

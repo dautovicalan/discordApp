@@ -7,6 +7,10 @@ public class ImageMessage implements Serializable, Externalizable{
     private File sentFile;
     private User messageSender;
 
+    public User getMessageSender() {
+        return messageSender;
+    }
+
     public ImageMessage() {
     }
 

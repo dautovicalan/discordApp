@@ -1,14 +1,19 @@
 package com.alan.discordapp;
 
+import com.alan.businessLayer.SettingsManager;
+import com.alan.businessLayer.UserManager;
+import com.alan.utils.ResolutionChangerUtil;
 import com.alan.utils.XMLUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -41,9 +46,14 @@ public class GameScreenController implements Initializable {
 
     @FXML
     private Button settingsButton;
+    @FXML
+    private Button logoutButton;
 
     @FXML
     private MenuItem miGenerateDocumentation;
+
+    @FXML
+    private MenuItem miSaveToXml;
 
 
     private static final String CLASS_EXTENSION = ".class";
@@ -51,13 +61,19 @@ public class GameScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        try {
-            XMLUtils.saveConfigurationToXmlFile();
-        } catch (ParserConfigurationException e) {
-            throw new RuntimeException(e);
-        } catch (TransformerException e) {
-            throw new RuntimeException(e);
-        }
+        miSaveToXml.setOnAction(e -> {
+            try {
+                XMLUtils.saveConfigurationToXmlFile();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("XML Success");
+                alert.setContentText("Saved to XML successfully");
+                alert.show();
+            } catch (ParserConfigurationException ex) {
+                ex.printStackTrace();
+            } catch (TransformerException ex) {
+                ex.printStackTrace();
+            }
+        });
 
     }
 
@@ -101,10 +117,28 @@ public class GameScreenController implements Initializable {
         mainPane.getChildren().setAll(settingView);
     }
 
+    public void logout() {
+        UserManager.logout();
+
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("hello-view.fxml"));
+
+        Scene scene = null;
+        try {
+            scene = new Scene(fxmlLoader.load(), 500, 500);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Stage stage = MainApplication.getMainStage();
+        stage.setTitle("Fake Discord!");
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        ResolutionChangerUtil.changeResolution(SettingsManager.getCurrenSettings().getResolutionType());
+        stage.show();
+    }
+
     public void generateDocumentation() {
-
         File documentationFile = new File("documentation.html");
-
         try {
 
             FileWriter writer = new FileWriter(documentationFile);
@@ -263,7 +297,6 @@ public class GameScreenController implements Initializable {
                 methodsParams.append(", ");
             }
         }
-
         return methodsParams.toString();
     }
 }

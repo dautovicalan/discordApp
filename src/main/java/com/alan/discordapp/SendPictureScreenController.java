@@ -7,6 +7,9 @@ import com.alan.rmi.PictureService;
 import com.alan.rmi.PictureServiceImpl;
 import com.alan.rmi.RMIServer;
 import com.alan.utils.FileUtils;
+import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -48,7 +51,7 @@ public class SendPictureScreenController implements Initializable {
 
         try {
             serverRegistry = LocateRegistry.getRegistry("127.0.0.1", 2000);
-            pictureService = (PictureService) serverRegistry.lookup("test");
+            pictureService = (PictureService) serverRegistry.lookup("pictureService");
             loadListeners();
             loadImages();
         } catch (RemoteException e) {
@@ -63,14 +66,14 @@ public class SendPictureScreenController implements Initializable {
             pictureService
                     .receiveAllSentPictures()
                     .forEach(imageMessage -> {
-                        vBoxPictures.getChildren().add(prepareImageBoxDesign(imageMessage.getSentFile()));
+                        prepareImageBoxDesign(imageMessage);
                     });
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void loadListeners() {
+    private void loadListeners() throws RemoteException {
         vBoxPictures.heightProperty().addListener((observableValue, number, newValue)
                 -> scrollPanePictures.setVvalue((Double) newValue));
     }
@@ -83,26 +86,34 @@ public class SendPictureScreenController implements Initializable {
         File file = fileChooser.showOpenDialog(null);
 
         if (file != null){
-            HBox imageBoxDesign = prepareImageBoxDesign(file);
+            ImageMessage imageMessage = new ImageMessage(UserManager.getLoggedInUser(), file);
+            HBox imageBoxDesign = prepareImageBoxDesign(imageMessage);
             vBoxPictures.getChildren().add(imageBoxDesign);
-            pictureService.sendPicture(new ImageMessage(UserManager.getLoggedInUser(), file));
+            pictureService.sendPicture(imageMessage);
+
+            List<ImageMessage> imageMessages = pictureService.receiveAllSentPictures();
+            vBoxPictures.getChildren().clear();
+            imageMessages.forEach(msg -> {
+                vBoxPictures.getChildren().add(prepareImageBoxDesign(msg));
+            });
 
         }
     }
 
-    private HBox prepareImageBoxDesign(File file) {
+
+    private HBox prepareImageBoxDesign(ImageMessage imageMessage) {
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.CENTER);
         hbox.setPadding(new Insets(5,5,5,10));
 
         Text text = new Text();
-        text.setText("Picture: ");
+        text.setText(imageMessage.getMessageSender().getFirstName() + " sent: ");
         hbox.getChildren().add(text);
 
         ImageView imageView = new ImageView();
         imageView.setFitHeight(100);
         imageView.setFitWidth(100);
-        imageView.setImage(new Image(file.toURI().toString()));
+        imageView.setImage(new Image(imageMessage.getSentFile().toURI().toString()));
 
         hbox.getChildren().add(imageView);
 
@@ -114,7 +125,7 @@ public class SendPictureScreenController implements Initializable {
                     new FileChooser.ExtensionFilter("Image Files", "*.png", "*jpg"));
             File savedFile = fileChooser.showSaveDialog(vBoxPictures.getScene().getWindow());
             if (savedFile != null) {
-                saveFileToSystem(savedFile, file);
+                saveFileToSystem(savedFile, imageMessage.getSentFile());
             }
         });
 
@@ -123,7 +134,7 @@ public class SendPictureScreenController implements Initializable {
         return hbox;
     }
 
-    private void saveFileToSystem(File savedFile, File file) {
+    private static void saveFileToSystem(File savedFile, File file) {
         try {
             FileUtils.copyFileContentToAnotherFile(file, savedFile);
         } catch (IOException e) {

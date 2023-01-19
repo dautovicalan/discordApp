@@ -22,23 +22,8 @@ public class SettingsManager {
 
     private static Settings currenSettings;
 
-    public static void saveSettings() throws IOException {
-        Path filePath = Paths.get(PATH);
-        Files.write(filePath, currenSettings.prepareForFile().getBytes(StandardCharsets.UTF_8));
-    }
-
     public static void changeCurrentSettings(Settings settings){
         currenSettings = settings;
-    }
-
-    public static void loadSettings() throws IOException {
-        Path filePath = Paths.get(PATH);
-        List<String> settingsList = Files.readAllLines(filePath, StandardCharsets.UTF_8);
-        System.out.println(settingsList);
-        currenSettings = new Settings(ResolutionType.valueOf(settingsList
-                .stream()
-                .findFirst()
-                .get()));
     }
 
     public static Settings getCurrenSettings(){

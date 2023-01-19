@@ -3,17 +3,13 @@ package com.alan.discordapp;
 import com.alan.businessLayer.UserManager;
 import com.alan.models.User;
 import com.alan.utils.AlertUtils;
-import com.alan.utils.JavaSoundRecorder;
-import com.alan.utils.WaveDataUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.media.AudioClip;
 import javafx.stage.FileChooser;
-
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -21,9 +17,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 public class VoiceScreenController implements Initializable {
-    //http://www.java2s.com/Tutorial/Java/0120__Development/CapturingAudiowithJavaSoundAPI.htm
     @FXML
     private Button sendVoiceMessage;
     @FXML
@@ -59,24 +55,40 @@ public class VoiceScreenController implements Initializable {
         User loggedInUser = UserManager.getLoggedInUser();
     }
 
-    private JavaSoundRecorder javaSoundRecorder = new JavaSoundRecorder();
-    public void recordVoiceMessage(){
+    private AudioFormat audioFormat;
+    private DataLine.Info dataInfo;
+    private TargetDataLine targetLine;
+    public void recordVoiceMessage() throws LineUnavailableException {
         if (!isRecording){
-            AudioFormat format = buildAudioFormatInstance();
-
-            javaSoundRecorder.build(format);
+            audioFormat = buildAudioFormatInstance();
+            dataInfo = new DataLine.Info(TargetDataLine.class, audioFormat);
+            if (!AudioSystem.isLineSupported(dataInfo)){
+                System.out.println("System line not supported");
+                System.exit(-1);
+            }
+            targetLine = (TargetDataLine) AudioSystem.getLine(dataInfo);
+            targetLine.open();
 
             System.out.println("Start recording ....");
-            javaSoundRecorder.start();
-
             isRecording = true;
             recordVoiceMessage.setText("Stop recording");
 
-        } else {
-            javaSoundRecorder.stop();
-            File savedFile = WaveDataUtils.saveToFile("myVoiceRecording", AudioFileFormat.Type.WAVE, javaSoundRecorder.getAudioInputStream());
-            lwVoiceMessages.getItems().add(savedFile);
+            new Thread(() -> {
+                targetLine.start();
+                AudioInputStream recordingStream = new AudioInputStream(targetLine);
+                File outputFile = new File("voiceMessages/" + UUID.randomUUID() + ".wav");
+                try {
+                    AudioSystem.write(recordingStream, AudioFileFormat.Type.WAVE, outputFile);
+                    lwVoiceMessages.getItems().add(outputFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("Stop recording and building your file");
+            }).start();
 
+        } else {
+            targetLine.stop();
+            targetLine.close();
             recordVoiceMessage.setText("Start recording");
             isRecording = false;
         }
@@ -89,7 +101,7 @@ public class VoiceScreenController implements Initializable {
         int sampleSize = 16;
         boolean bigEndian = true;
 
-        return new AudioFormat(encoding, rate, sampleSize, channels, (sampleSize / 8) * channels, rate, bigEndian);
+        return new AudioFormat(encoding, 44100, 16, 2, 4, 44100, false);
     }
 
     public void playVoiceMessage(){

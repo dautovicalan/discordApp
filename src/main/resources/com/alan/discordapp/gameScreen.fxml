@@ -19,6 +19,11 @@
               <MenuItem fx:id="miGenerateDocumentation" mnemonicParsing="false" onAction="#generateDocumentation" text="Generate Doucementation" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="XML">
+               <items>
+                  <MenuItem fx:id="miSaveToXml" mnemonicParsing="false" onAction="#generateDocumentation" text="Generate XML" />
+               </items>
+            </Menu>
         </menus>
       </MenuBar>
    </top>
@@ -46,6 +51,11 @@
                </font>
             </Button>
             <Button fx:id="settingsButton" mnemonicParsing="false" onAction="#showSettingsScene" prefHeight="47.0" prefWidth="154.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Settings">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+            <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#logout" prefHeight="47.0" prefWidth="154.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Logout">
                <font>
                   <Font size="18.0" />
                </font>
