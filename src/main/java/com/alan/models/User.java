@@ -2,25 +2,26 @@ package com.alan.models;
 
 import javafx.scene.image.Image;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import java.io.*;
-import java.nio.file.Path;
-import java.util.UUID;
 
-public class User implements Serializable, Externalizable {
+public class User implements Serializable, Externalizable, Comparable<User> {
 
     private static final long serialVersionUID = 5L;
 
-    private final String DEL = "|";
-
     public User(){
     }
-
     private long userId;
     private String firstName;
     private String lastName;
+    private int messagesSent;
+
+    public int getMessagesSent() {
+        return messagesSent;
+    }
+
+    public void addMessage() {
+        this.messagesSent++;
+    }
 
     private Image userPicture;
 
@@ -38,8 +39,7 @@ public class User implements Serializable, Externalizable {
         this.lastName = lastName;
     }
 
-    public User(String firstName, String lastName, Image userPicture) {
-        this.userId = ProcessHandle.current().pid();
+    public void updateUserProfile(String firstName, String lastName, Image userPicture) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userPicture = userPicture;
@@ -47,12 +47,25 @@ public class User implements Serializable, Externalizable {
 
     public static User parseFromFile(String stringRep) {
 
-        String[] s = stringRep.split("_");
+        String[] arrayOfUserInfo = stringRep.split("\\|");
 
-        if (s.length == 0){
+        if (arrayOfUserInfo.length == 0){
             return new User("No name", "No name");
         }
-        return new User(s[0], s[1]);
+        User preparedUser;
+        String[] userInfo = arrayOfUserInfo[0].split("_");
+        preparedUser = new User(userInfo[0], userInfo[1]);
+
+        if (arrayOfUserInfo.length == 1){
+            preparedUser.messagesSent = 0;
+        }
+        preparedUser.messagesSent = Integer.parseInt(arrayOfUserInfo[1]);
+
+        return preparedUser;
+    }
+
+    public String prepareForLeaderBoard() {
+        return (firstName.trim() + "_" +  lastName.trim() + "|" + System.lineSeparator());
     }
 
     public String getFirstName() {
@@ -73,13 +86,9 @@ public class User implements Serializable, Externalizable {
         this.lastName = lastName;
     }
 
-    public byte[] prepareForLeaderBoard() {
-        return (firstName.trim() + "_" +  lastName.trim()).getBytes();
-    }
-
     @Override
     public String toString() {
-        return firstName + " " + lastName;
+        return firstName + " " + lastName + " | Messages sent: " + messagesSent;
     }
 
     @Override
@@ -94,5 +103,10 @@ public class User implements Serializable, Externalizable {
         userId = in.readLong();
         firstName = in.readUTF();
         lastName = in.readUTF();
+    }
+
+    @Override
+    public int compareTo(User o) {
+        return Integer.valueOf(this.messagesSent).compareTo(Integer.valueOf(o.messagesSent));
     }
 }

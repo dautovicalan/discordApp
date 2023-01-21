@@ -9,7 +9,6 @@ public class RMIClient {
 
     // TESTING INIT VERSION OF RMI CLIENT
     public static void main(String[] args) throws RemoteException, NotBoundException {
-
         try {
             // Locate the registry
             Registry registry = LocateRegistry.getRegistry("127.0.0.1", 2000);

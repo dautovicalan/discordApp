@@ -14,12 +14,10 @@ import java.util.List;
 public class PictureServiceImpl implements PictureService{
 
     private List<ImageMessage> allSentPictures = new ArrayList<>();
-
     @Override
     public void sendPicture(ImageMessage message) throws RemoteException {
         allSentPictures.add(message);
     }
-
     @Override
     public List<ImageMessage> receiveAllSentPictures() throws RemoteException {
         return allSentPictures;

@@ -14,8 +14,6 @@ public class RMIServer {
 
     private static final String RMI_PORT_KEY = "rmi.port";
     private static final int RANDOM_PORT_HINT = 0;
-    private static final int RMI_PORT = 2000;
-
 
     public static void main(String[] args) {
         try {
@@ -36,12 +34,8 @@ public class RMIServer {
 
             System.err.println("RMI Server Ready on Port: " + rmiPortString);
 
-        } catch (RemoteException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (NamingException e) {
-            throw new RuntimeException(e);
         }
     }
 }

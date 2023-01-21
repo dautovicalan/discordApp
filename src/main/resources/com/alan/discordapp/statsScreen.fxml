@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7 #727CF7#727CF7;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.alan.discordapp.StatsScreenController">
    <children>
-      <Label fx:id="messagesSentLabel" alignment="TOP_LEFT" layoutX="45.0" layoutY="46.0" prefHeight="308.0" prefWidth="510.0" text="You sent:">
+      <Label fx:id="messagesSentLabel" alignment="TOP_LEFT" layoutX="45.0" layoutY="46.0" prefHeight="128.0" prefWidth="510.0" text="You sent:">
          <font>
             <Font name="Arial Black" size="44.0" />
          </font>
       </Label>
+      <ImageView fitHeight="204.0" fitWidth="303.0" layoutX="252.0" layoutY="184.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../stats.jpg" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

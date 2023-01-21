@@ -3,6 +3,7 @@ package com.alan.discordapp;
 import com.alan.businessLayer.UserManager;
 import com.alan.models.User;
 import com.alan.utils.AlertUtils;
+import com.alan.utils.JavaSoundRecorder;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -16,6 +17,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
@@ -55,53 +57,21 @@ public class VoiceScreenController implements Initializable {
         User loggedInUser = UserManager.getLoggedInUser();
     }
 
-    private AudioFormat audioFormat;
-    private DataLine.Info dataInfo;
-    private TargetDataLine targetLine;
-    public void recordVoiceMessage() throws LineUnavailableException {
+    private JavaSoundRecorder javaSoundRecorder = JavaSoundRecorder.createRecorder();
+    private Thread runningThread = new Thread(javaSoundRecorder);
+    public void recordVoiceMessage() throws LineUnavailableException, InterruptedException {
         if (!isRecording){
-            audioFormat = buildAudioFormatInstance();
-            dataInfo = new DataLine.Info(TargetDataLine.class, audioFormat);
-            if (!AudioSystem.isLineSupported(dataInfo)){
-                System.out.println("System line not supported");
-                System.exit(-1);
-            }
-            targetLine = (TargetDataLine) AudioSystem.getLine(dataInfo);
-            targetLine.open();
-
-            System.out.println("Start recording ....");
             isRecording = true;
             recordVoiceMessage.setText("Stop recording");
-
-            new Thread(() -> {
-                targetLine.start();
-                AudioInputStream recordingStream = new AudioInputStream(targetLine);
-                File outputFile = new File("voiceMessages/" + UUID.randomUUID() + ".wav");
-                try {
-                    AudioSystem.write(recordingStream, AudioFileFormat.Type.WAVE, outputFile);
-                    lwVoiceMessages.getItems().add(outputFile);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                System.out.println("Stop recording and building your file");
-            }).start();
-
+            runningThread.start();
         } else {
-            targetLine.stop();
-            targetLine.close();
+            Optional<File> file = javaSoundRecorder.stopRecording();
+            if (file.isPresent()){
+                lwVoiceMessages.getItems().add(file.get());
+            }
             recordVoiceMessage.setText("Start recording");
             isRecording = false;
         }
-    }
-
-    private AudioFormat buildAudioFormatInstance() {
-        AudioFormat.Encoding encoding = AudioFormat.Encoding.PCM_SIGNED;
-        float rate = 44100.0f;
-        int channels = 1;
-        int sampleSize = 16;
-        boolean bigEndian = true;
-
-        return new AudioFormat(encoding, 44100, 16, 2, 4, 44100, false);
     }
 
     public void playVoiceMessage(){

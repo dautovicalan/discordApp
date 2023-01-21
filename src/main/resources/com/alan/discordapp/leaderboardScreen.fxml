@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #727CF7;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.alan.discordapp.LeaderboardScreenController">
+<AnchorPane prefHeight="400.0" prefWidth="709.0" style="-fx-background-color: #727CF7;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.alan.discordapp.LeaderboardScreenController">
    <children>
       <Label alignment="TOP_LEFT" contentDisplay="TOP" layoutX="22.0" layoutY="17.0" prefHeight="26.0" prefWidth="546.0" text="Leaderboard:">
          <font>
@@ -14,5 +14,7 @@
          </font>
       </Label>
       <ListView fx:id="userListView" layoutX="22.0" layoutY="58.0" prefHeight="327.0" prefWidth="556.0" />
+      <Button fx:id="btnSortAsc" layoutX="598.0" layoutY="60.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="86.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Sort ASC" />
+      <Button fx:id="btnSortDesc" layoutX="599.0" layoutY="116.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="86.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Sort DESC" />
    </children>
 </AnchorPane>

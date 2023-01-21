@@ -2,14 +2,8 @@ package com.alan.discordapp;
 
 import com.alan.businessLayer.UserManager;
 import com.alan.models.ImageMessage;
-import com.alan.models.Message;
 import com.alan.rmi.PictureService;
-import com.alan.rmi.PictureServiceImpl;
-import com.alan.rmi.RMIServer;
 import com.alan.utils.FileUtils;
-import javafx.application.Platform;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -22,11 +16,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -39,10 +31,10 @@ public class SendPictureScreenController implements Initializable {
     private ScrollPane scrollPanePictures;
     @FXML
     private VBox vBoxPictures;
-
+    @FXML
+    private Button refreshButton;
     @FXML
     private Button uploadAndSendButton;
-
     private Registry serverRegistry;
     private PictureService pictureService;
 
@@ -54,10 +46,8 @@ public class SendPictureScreenController implements Initializable {
             pictureService = (PictureService) serverRegistry.lookup("pictureService");
             loadListeners();
             loadImages();
-        } catch (RemoteException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (NotBoundException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -71,6 +61,11 @@ public class SendPictureScreenController implements Initializable {
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void refreshForNewImages(){
+        vBoxPictures.getChildren().clear();
+        loadImages();
     }
 
     private void loadListeners() throws RemoteException {
@@ -99,7 +94,6 @@ public class SendPictureScreenController implements Initializable {
 
         }
     }
-
 
     private HBox prepareImageBoxDesign(ImageMessage imageMessage) {
         HBox hbox = new HBox();

@@ -14,6 +14,7 @@
             <VBox fx:id="vBoxPictures" prefHeight="262.0" prefWidth="427.0" />
          </content>
       </ScrollPane>
-      <Button fx:id="uploadAndSendButton" layoutX="268.0" layoutY="341.0" mnemonicParsing="false" onAction="#uploadAndSendPicture" prefHeight="29.0" prefWidth="175.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Upload and Send Picture" />
+      <Button fx:id="uploadAndSendButton" layoutX="191.0" layoutY="340.0" mnemonicParsing="false" onAction="#uploadAndSendPicture" prefHeight="29.0" prefWidth="175.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Upload and Send Picture" />
+      <Button fx:id="refreshButton" layoutX="380.0" layoutY="340.0" mnemonicParsing="false" onAction="#refreshForNewImages" prefHeight="29.0" prefWidth="175.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Refresh" />
    </children>
 </AnchorPane>

@@ -159,7 +159,8 @@ public final class XMLUtils {
                 if (userPicturePath.isEmpty()){
                     userPicturePath = "/Users/alandautovic/Development/Uni_Projects/discordApp/defaultPicture.jpg";
                 }
-                UserManager.setLoggedInUser(new User(firstName, lastName, new Image(new File(userPicturePath).toURI().toString())));
+                UserManager.setLoggedInUser(new User(firstName, lastName));
+                UserManager.getLoggedInUser().setUserPicture(new Image(userPicturePath));
             }
         }
     }

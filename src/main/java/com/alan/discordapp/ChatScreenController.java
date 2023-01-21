@@ -62,6 +62,7 @@ public class ChatScreenController implements Initializable {
 
         sendButton.setOnAction(actionEvent -> {
             String messageToSend = textField.getText();
+            UserManager.getLoggedInUser().addMessage();
             if (!messageToSend.isEmpty()){
                 vBoxMessage.getChildren()
                         .add(prepareMessageBoxDesign(Pos.CENTER_RIGHT, messageToSend, BLUE_MESSAGES));

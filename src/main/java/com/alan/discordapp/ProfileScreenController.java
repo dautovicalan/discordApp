@@ -55,8 +55,8 @@ public class ProfileScreenController implements Initializable {
         newUsername = username.getText().trim();
         newForename = forename.getText().trim();
 
-        User newUserInfo = new User(newUsername, newForename, profilePicture.getImage());
-        UserManager.setLoggedInUser(newUserInfo);
+        UserManager.getLoggedInUser()
+                        .updateUserProfile(newUsername, newForename, profilePicture.getImage());
         AlertUtils.showInfoMessage("Succesfuly updated your profile");
     }
 }

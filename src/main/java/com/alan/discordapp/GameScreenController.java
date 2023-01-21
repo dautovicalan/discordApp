@@ -4,6 +4,7 @@ import com.alan.businessLayer.SettingsManager;
 import com.alan.businessLayer.UserManager;
 import com.alan.utils.ResolutionChangerUtil;
 import com.alan.utils.XMLUtils;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -55,6 +56,8 @@ public class GameScreenController implements Initializable {
     @FXML
     private MenuItem miSaveToXml;
 
+    @FXML
+    private MenuItem miExit;
 
     private static final String CLASS_EXTENSION = ".class";
 
@@ -135,6 +138,10 @@ public class GameScreenController implements Initializable {
         stage.centerOnScreen();
         ResolutionChangerUtil.changeResolution(SettingsManager.getCurrenSettings().getResolutionType());
         stage.show();
+    }
+
+    public void exitApplication(){
+        Platform.exit();
     }
 
     public void generateDocumentation() {

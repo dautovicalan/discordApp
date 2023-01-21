@@ -53,8 +53,7 @@ public class LoginController implements Initializable {
 
         User loginUser = new User(firstNameTextField.getText(), lastNameTextField.getText());
         UserManager.setLoggedInUser(loginUser);
-        LeaderboardManager.saveUserToLeaderBoard(loginUser);
-
+        LeaderboardManager.addNewUserToLeaderboard(loginUser);
 
         loadMainApplication();
     }

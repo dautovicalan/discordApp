@@ -2,6 +2,7 @@ package com.alan.discordapp;
 
 import com.alan.businessLayer.LeaderboardManager;
 import com.alan.businessLayer.SettingsManager;
+import com.alan.businessLayer.UserManager;
 import com.alan.models.ResolutionType;
 import com.alan.models.Settings;
 import com.alan.utils.XMLUtils;
@@ -56,9 +57,7 @@ public class MainApplication extends Application {
             }
             return false;
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (SAXException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -70,6 +69,10 @@ public class MainApplication extends Application {
 
     @Override
     public void stop() {
-
+        try {
+            LeaderboardManager.saveLeaderboard();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

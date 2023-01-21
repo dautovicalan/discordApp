@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface PictureService extends Remote {
-
     void sendPicture(ImageMessage message) throws RemoteException;
     List<ImageMessage> receiveAllSentPictures() throws RemoteException;
 }

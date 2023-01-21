@@ -24,6 +24,11 @@
                   <MenuItem fx:id="miSaveToXml" mnemonicParsing="false" onAction="#generateDocumentation" text="Generate XML" />
                </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="App">
+               <items>
+                  <MenuItem fx:id="miExit" mnemonicParsing="false" onAction="#exitApplication" text="Exit" />
+               </items>
+            </Menu>
         </menus>
       </MenuBar>
    </top>
