@@ -56,4 +56,13 @@ public class HomeScreenController implements Initializable {
             throw new RuntimeException(e);
         }
     }
+
+    public void showVideoScene(){
+        try {
+            AnchorPane cameraScreen = FXMLLoader.load(getClass().getResource("cameraScreen.fxml"));
+            mainPane.setCenter(cameraScreen);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

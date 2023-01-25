@@ -25,6 +25,11 @@
                         <Font size="14.0" />
                      </font>
                   </Button>
+                  <Button mnemonicParsing="false" onAction="#showVideoScene" prefHeight="26.0" prefWidth="126.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Video">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
                </children>
             </VBox>
          </left>

@@ -3,6 +3,7 @@ package com.alan.discordapp;
 import com.alan.businessLayer.UserManager;
 import com.alan.models.ImageMessage;
 import com.alan.rmi.PictureService;
+import com.alan.utils.AlertUtils;
 import com.alan.utils.FileUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -53,15 +54,18 @@ public class SendPictureScreenController implements Initializable {
     }
 
     private void loadImages() {
-        try {
-            pictureService
-                    .receiveAllSentPictures()
-                    .forEach(imageMessage -> {
-                        prepareImageBoxDesign(imageMessage);
-                    });
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+        new Thread(() -> {
+            try {
+                pictureService
+                        .receiveAllSentPictures()
+                        .forEach(imageMessage -> {
+                            vBoxPictures.getChildren().add(prepareImageBoxDesign(imageMessage));
+                        });
+            } catch (RemoteException e) {
+                e.printStackTrace();
+                AlertUtils.showErrorMessage("Something went wrong while loading images...");
+            }
+        }).start();
     }
 
     public void refreshForNewImages(){

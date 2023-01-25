@@ -24,5 +24,10 @@
       <Button fx:id="refreshButton" layoutX="273.0" layoutY="380.0" mnemonicParsing="false" onAction="#refreshRmiVoices" prefHeight="35.0" prefWidth="73.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Refresh" />
       <Button layoutX="526.0" layoutY="172.0" mnemonicParsing="false" onAction="#playRmiVoiceMessage" prefHeight="42.0" prefWidth="142.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Play RMI voices" />
       <Button layoutX="527.0" layoutY="222.0" mnemonicParsing="false" onAction="#stopVoiceMessage" prefHeight="42.0" prefWidth="142.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Stop RMI voices" />
+      <Label layoutX="292.0" layoutY="20.0" text="RMI Voice Messages">
+         <font>
+            <Font name="Arial Black" size="18.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

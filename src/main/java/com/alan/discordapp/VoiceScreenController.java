@@ -55,14 +55,17 @@ public class VoiceScreenController implements Initializable {
         loadRmiVoiceMessages();
     }
     private void loadLocalVoiceMessages() {
-        File dir = new File(Paths.get("voiceMessages").toUri());
-        File[] voiceMessages = dir.listFiles();
 
-        for (File f :
-                voiceMessages) {
-            System.out.println(f.getName());
-            lwVoiceMessages.getItems().add(f);
-        }
+        new Thread(() -> {
+            File dir = new File(Paths.get("voiceMessages").toUri());
+            File[] voiceMessages = dir.listFiles();
+
+            for (File f :
+                    voiceMessages) {
+                System.out.println(f.getName());
+                lwVoiceMessages.getItems().add(f);
+            }
+        }).start();
     }
 
     private void loadRmiVoiceMessages() {
