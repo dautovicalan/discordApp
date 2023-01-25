@@ -7,6 +7,7 @@ module com.alan.discordapp {
     requires java.desktop;
     requires java.rmi;
     requires java.naming;
+    requires opencv;
 
     opens com.alan.discordapp to javafx.fxml;
     exports com.alan.rmi;

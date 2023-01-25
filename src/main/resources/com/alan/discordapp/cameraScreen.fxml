@@ -4,9 +4,12 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.alan.discordapp.CameraScreenController">
-   <children>
-      <ImageView fx:id="ivVideo" fitHeight="220.0" fitWidth="380.0" layoutX="110.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true" />
-      <Button layoutX="206.0" layoutY="276.0" mnemonicParsing="false" onAction="#startCamera" prefHeight="54.0" prefWidth="188.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Start Camera" />
-   </children>
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.alan.discordapp.CameraScreenController">
+   <ImageView fx:id="ivVideo" fitHeight="220.0" fitWidth="380.0" layoutX="110.0" layoutY="20.0" pickOnBounds="true"
+              preserveRatio="true"/>
+   <Button layoutX="110.0" layoutY="277.0" mnemonicParsing="false" onAction="#startCamera" prefHeight="54.0"
+           prefWidth="188.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Start Camera"/>
+   <Button layoutX="312.0" layoutY="277.0" mnemonicParsing="false" onAction="#saveImage" prefHeight="54.0"
+           prefWidth="188.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Save Image"/>
 </AnchorPane>

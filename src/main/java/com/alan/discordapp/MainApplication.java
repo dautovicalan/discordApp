@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+import org.opencv.core.Core;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,9 +17,14 @@ import java.nio.file.Paths;
 
 public class MainApplication extends Application {
 
+    static {
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+    }
+
     private static Stage mainStage;
     @Override
     public void start(Stage stage) throws IOException {
+        System.out.println("OpenCV version " + Core.VERSION);
         FXMLLoader fxmlLoader;
         Scene scene;
         if (continueAsLastLoggedInUser()){
