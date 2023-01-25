@@ -2,15 +2,12 @@ package com.alan.discordapp;
 
 import com.alan.businessLayer.SettingsManager;
 import com.alan.models.ResolutionType;
-import com.alan.models.Settings;
 import com.alan.utils.ResolutionChangerUtil;
 import javafx.collections.FXCollections;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;

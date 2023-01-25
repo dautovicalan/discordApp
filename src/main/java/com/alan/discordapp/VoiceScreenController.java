@@ -1,7 +1,6 @@
 package com.alan.discordapp;
 
-import com.alan.businessLayer.UserManager;
-import com.alan.models.User;
+import com.alan.rmi.VoiceService;
 import com.alan.utils.AlertUtils;
 import com.alan.utils.JavaSoundRecorder;
 import javafx.fxml.FXML;
@@ -10,16 +9,18 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.media.AudioClip;
 import javafx.stage.FileChooser;
-import javax.sound.sampled.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.UUID;
 
 public class VoiceScreenController implements Initializable {
     @FXML
@@ -35,14 +36,25 @@ public class VoiceScreenController implements Initializable {
     @FXML
     private Button deleteAudioButton;
     @FXML
+    private Button refreshButton;
+    @FXML
     private ListView<File> lwVoiceMessages;
+    @FXML
+    private ListView<File> lwRmiVoiceMessages;
 
     private AudioClip audioSample;
 
     private boolean isRecording = false;
 
+    private Registry serverRegistry;
+    private VoiceService voiceService;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        loadLocalVoiceMessages();
+        loadRmiVoiceMessages();
+    }
+    private void loadLocalVoiceMessages() {
         File dir = new File(Paths.get("voiceMessages").toUri());
         File[] voiceMessages = dir.listFiles();
 
@@ -53,13 +65,41 @@ public class VoiceScreenController implements Initializable {
         }
     }
 
+    private void loadRmiVoiceMessages() {
+        try {
+            serverRegistry = LocateRegistry.getRegistry("127.0.0.1", 2000);
+            voiceService = (VoiceService) serverRegistry.lookup("voiceService");
+            loadVoices();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadVoices() throws RemoteException {
+        voiceService
+                .receiveAllVoiceMessages()
+                .forEach(voiceFile -> {
+                    lwRmiVoiceMessages.getItems().add(voiceFile);
+                });
+    }
+
     public void sendVoiceMessage(){
-        User loggedInUser = UserManager.getLoggedInUser();
+        if (lwVoiceMessages.getSelectionModel().getSelectedItem() == null) {
+            AlertUtils.showInfoMessage("Please select local file to send!");
+            return;
+        }
+        try {
+            voiceService.sendVoiceMessage(lwVoiceMessages.getSelectionModel().getSelectedItem());
+            AlertUtils.showInfoMessage("Success sending voice message over RMI");
+            refreshRmiVoices();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     private JavaSoundRecorder javaSoundRecorder = JavaSoundRecorder.createRecorder();
     private Thread runningThread = new Thread(javaSoundRecorder);
-    public void recordVoiceMessage() throws LineUnavailableException, InterruptedException {
+    public void recordVoiceMessage() {
         if (!isRecording){
             isRecording = true;
             recordVoiceMessage.setText("Stop recording");
@@ -76,13 +116,26 @@ public class VoiceScreenController implements Initializable {
 
     public void playVoiceMessage(){
         if (lwVoiceMessages.getSelectionModel().getSelectedItem() == null){
-            AlertUtils.showInfoMessage("Please select file to play");
+            AlertUtils.showInfoMessage("Please select local file to play");
             return;
         }
+        playSound(lwVoiceMessages.getSelectionModel().getSelectedItem());
+    }
+
+    public void playRmiVoiceMessage(){
+        if (lwRmiVoiceMessages.getSelectionModel().getSelectedItem() == null){
+            AlertUtils.showInfoMessage("Please select RMI file to play");
+            return;
+        }
+        playSound(lwRmiVoiceMessages.getSelectionModel().getSelectedItem());
+    }
+
+    private void playSound(File file){
         if (audioSample != null && audioSample.isPlaying()){
+            AlertUtils.showInfoMessage("Already playing something...");
             return;
         }
-        audioSample = new AudioClip(lwVoiceMessages.getSelectionModel().getSelectedItem().toURI().toString());
+        audioSample = new AudioClip(file.toURI().toString());
         audioSample.play();
     }
 
@@ -116,6 +169,15 @@ public class VoiceScreenController implements Initializable {
         Files.deleteIfExists(Path.of(lwVoiceMessages.getSelectionModel().getSelectedItem().getPath()));
         lwVoiceMessages.getItems()
                 .remove(lwVoiceMessages.getSelectionModel().getSelectedIndex());
+    }
+
+    public void refreshRmiVoices() {
+        lwRmiVoiceMessages.getItems().clear();
+        try {
+            loadVoices();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
 }

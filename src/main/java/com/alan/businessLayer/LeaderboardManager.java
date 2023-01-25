@@ -6,14 +6,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class LeaderboardManager {
 
-    private static final String LEADERBOARD_PATH = "leaderboard.txt";
+    private static final String LEADERBOARD_PATH = "leaderboard/leaderboard.txt";
     private LeaderboardManager(){
 
     }
@@ -27,24 +26,22 @@ public class LeaderboardManager {
     public static void saveLeaderboard() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         listOfUsers.forEach(us -> stringBuilder.append(us.prepareForLeaderBoard()));
-        Files.write(Paths.get(LEADERBOARD_PATH), stringBuilder.toString().getBytes(), StandardOpenOption.APPEND);
+        Files.write(Paths.get(LEADERBOARD_PATH), stringBuilder.toString().getBytes());
     }
-    public static List<User> loadLeaderboardList() throws IOException {
 
-        if (listOfUsers.size() != 0){
-            return listOfUsers;
-        }
-
+    public static void loadLeaderboardList() throws IOException {
         File f = new File(LEADERBOARD_PATH);
         if(!f.exists() && !f.isDirectory()) {
             Files.createFile(f.toPath());
-            return listOfUsers;
         }
 
-        Files.readAllLines(Paths.get(LEADERBOARD_PATH)).forEach(s -> {
-            listOfUsers.add(User.parseFromFile(s));
-        });
+        List<String> leaderboardLines = Files.readAllLines(Paths.get(LEADERBOARD_PATH));
+        if (leaderboardLines.size() != 0) {
+            leaderboardLines.forEach(s -> listOfUsers.add(User.parseFromFile(s)));
+        }
+    }
 
+    public static List<User> getListOfUsers() {
         return listOfUsers;
     }
 }

@@ -1,11 +1,15 @@
 package com.alan.utils;
 
+import javafx.scene.control.Alert;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class FileUtils {
+public final class FileUtils {
+    private FileUtils(){
+    }
 
     public static void copyFileContentToAnotherFile(File source, File destination) throws IOException {
         FileInputStream in = new FileInputStream(source);
@@ -16,7 +20,8 @@ public class FileUtils {
                 out.write(n);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            AlertUtils.showErrorMessage("Something went wrong while saving file");
+            e.printStackTrace();
         } finally {
             if (in != null) {
                 in.close();

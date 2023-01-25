@@ -1,11 +1,10 @@
 package com.alan.discordapp;
 
-import com.alan.businessLayer.ConversationManager;
+import com.alan.businessLayer.UserManager;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -16,7 +15,8 @@ public class StatsScreenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println(ConversationManager.getStatistic());
-        messagesSentLabel.setText(ConversationManager.getStatistic());
+        messagesSentLabel.setText(
+                "You sent: " + UserManager.getLoggedInUser().getMessagesSent() + " messages :)"
+        );
     }
 }

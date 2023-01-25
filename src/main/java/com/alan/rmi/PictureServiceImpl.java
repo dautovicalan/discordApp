@@ -1,12 +1,6 @@
 package com.alan.rmi;
 
-import com.alan.discordapp.SendPictureScreenController;
 import com.alan.models.ImageMessage;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.scene.layout.VBox;
-
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;

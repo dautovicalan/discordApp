@@ -3,10 +3,7 @@ package com.alan.utils;
 import com.alan.businessLayer.ConversationManager;
 import com.alan.businessLayer.SettingsManager;
 import com.alan.businessLayer.UserManager;
-import com.alan.models.ResolutionType;
-import com.alan.models.Settings;
-import com.alan.models.TextMessage;
-import com.alan.models.User;
+import com.alan.models.*;
 import javafx.scene.image.Image;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -18,7 +15,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -27,11 +23,13 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 public final class XMLUtils {
 
+    public static final String DIR = "xml";
     private static DocumentBuilderFactory documentBuilderFactory
             = DocumentBuilderFactory.newInstance();
     private static DocumentBuilder documentBuilder;
@@ -46,9 +44,6 @@ public final class XMLUtils {
 
     private static Document xmlDocument = documentBuilder.newDocument();
     public static void saveConfigurationToXmlFile() throws ParserConfigurationException, TransformerException {
-        List<TextMessage> allLoggedInUserMessages =
-                ConversationManager.getConversation().getAllMessages();
-
 
         Element root = xmlDocument.createElement("fakediscord");
 
@@ -62,7 +57,7 @@ public final class XMLUtils {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         DOMSource domSource = new DOMSource(xmlDocument);
-        StreamResult streamResult = new StreamResult(new File("testXml.xml"));
+        StreamResult streamResult = new StreamResult(new File(DIR + File.separator + "testXml.xml"));
 
         transformer.transform(domSource, streamResult);
 
@@ -81,11 +76,15 @@ public final class XMLUtils {
         lastName.appendChild(xmlDocument.createTextNode(loggedInUser.getLastName()));
         userInfo.appendChild(lastName);
 
+        Element userPicturePath = xmlDocument.createElement("userPicturePath");
         if (loggedInUser.getUserPicture() != null){
-            Element userPicturePath = xmlDocument.createElement("userPicturePath");
             userPicturePath.appendChild(xmlDocument.createTextNode(loggedInUser.getUserPicture().getUrl()));
-            userInfo.appendChild(userPicturePath);
         }
+        userInfo.appendChild(userPicturePath);
+
+        Element messagesSent = xmlDocument.createElement("messagesSent");
+        messagesSent.setTextContent(String.valueOf(loggedInUser.getMessagesSent()));
+        userInfo.appendChild(messagesSent);
 
         Element loggedInDate = xmlDocument.createElement("loggedInDate");
         loggedInDate.appendChild(xmlDocument.createTextNode(LocalDateTime.now().toString()));
@@ -96,33 +95,40 @@ public final class XMLUtils {
     }
 
     private static void addUserMessagesNodes(Element root) {
-        List<TextMessage> allMessages = ConversationManager.getConversation().getAllMessages();
-        Element userMessages = xmlDocument.createElement("userMessages");
+        Optional<Stream<Conversation>> allUserConversations = ConversationManager.getUserConversations(UserManager.getLoggedInUser());
+        Element userConversations = xmlDocument.createElement("userConversations");
 
-        allMessages.forEach(msg -> {
-            Element singleMessage = xmlDocument.createElement("message");
-            singleMessage.setAttribute("createdOn", msg.getCreatedOn().toString());
+        if (allUserConversations.isPresent()){
+            allUserConversations.get().toList().forEach(conversation -> {
 
-            Element content = xmlDocument.createElement("content");
-            content.appendChild(xmlDocument.createTextNode(msg.getMessageContent()));
+                Element singleConversation = xmlDocument.createElement("conversation");
 
-            singleMessage.appendChild(content);
+                conversation.getAllMessages().forEach(msg -> {
+                    Element singleMessage = xmlDocument.createElement("message");
+                    singleMessage.setAttribute("createdOn", msg.getCreatedOn().toString());
 
-            Element sentBy = xmlDocument.createElement("sentBy");
-            Element firstName = xmlDocument.createElement("firstName");
-            Element lastName = xmlDocument.createElement("lastName");
+                    Element content = xmlDocument.createElement("content");
+                    content.appendChild(xmlDocument.createTextNode(msg.getMessageContent()));
 
-            firstName.appendChild(xmlDocument.createTextNode(msg.getMessageSender().getFirstName()));
-            lastName.appendChild(xmlDocument.createTextNode(msg.getMessageSender().getLastName()));
+                    singleMessage.appendChild(content);
 
-            sentBy.appendChild(firstName);
-            sentBy.appendChild(lastName);
-            singleMessage.appendChild(sentBy);
+                    Element sentBy = xmlDocument.createElement("sentBy");
+                    Element firstName = xmlDocument.createElement("firstName");
+                    Element lastName = xmlDocument.createElement("lastName");
 
-            userMessages.appendChild(singleMessage);
-        });
+                    firstName.appendChild(xmlDocument.createTextNode(msg.getMessageSender().getFirstName()));
+                    lastName.appendChild(xmlDocument.createTextNode(msg.getMessageSender().getLastName()));
 
-        root.appendChild(userMessages);
+                    sentBy.appendChild(firstName);
+                    sentBy.appendChild(lastName);
+                    singleMessage.appendChild(sentBy);
+
+                    singleConversation.appendChild(singleMessage);
+                    userConversations.appendChild(singleConversation);
+                });
+            });
+        }
+        root.appendChild(userConversations);
     }
 
     private static void addAppSettingsNode(Element root) {
@@ -138,11 +144,11 @@ public final class XMLUtils {
 
     public static void loadConfigurationFromXmlFile() throws IOException, SAXException {
 
-        Document parsedDocument = documentBuilder.parse(new File("testXml.xml"));
+        Document parsedDocument = documentBuilder.parse(new File(DIR + File.separator + "testXml.xml"));
         parsedDocument.getDocumentElement().normalize();
 
         parseUserInfo(parsedDocument);
-        parseUserMessages(parsedDocument);
+        parseUserConversations(parsedDocument);
         parseAppSettings(parsedDocument);
     }
 
@@ -156,47 +162,53 @@ public final class XMLUtils {
                 String firstName = element.getElementsByTagName("firstName").item(0).getTextContent();
                 String lastName = element.getElementsByTagName("lastName").item(0).getTextContent();
                 String userPicturePath = element.getElementsByTagName("userPicturePath").item(0).getTextContent();
-                if (userPicturePath.isEmpty()){
-                    userPicturePath = "/Users/alandautovic/Development/Uni_Projects/discordApp/defaultPicture.jpg";
+                int messagesSent = Integer.parseInt(element.getElementsByTagName("messagesSent").item(0).getTextContent());
+                if (userPicturePath.isEmpty() || userPicturePath.isBlank()){
+                    System.out.println("Uso sam u picture path");
+                    userPicturePath = "file:/Users/alandautovic/Development/Uni_Projects/discordApp/defaultPicture.jpg";
                 }
                 UserManager.setLoggedInUser(new User(firstName, lastName));
                 UserManager.getLoggedInUser().setUserPicture(new Image(userPicturePath));
+                UserManager.getLoggedInUser().setMessagesSent(messagesSent);
             }
         }
     }
 
-    private static void parseUserMessages(Document parsedDocument) {
+    private static void parseUserConversations(Document parsedDocument) {
 
-        List<TextMessage> textMessages = new ArrayList<>();
-        NodeList list = parsedDocument.getElementsByTagName("message");
-
+        NodeList list = parsedDocument.getElementsByTagName("conversation");
         for (int temp = 0; temp < list.getLength(); temp++){
             Node node = list.item(temp);
+            if (node.getNodeType() == Node.ELEMENT_NODE){
+                Element element = (Element) node;
+
+                NodeList messages = element.getElementsByTagName("message");
+                Conversation singleConversation = parseUserMessage(messages);
+                ConversationManager.addConversation(singleConversation);
+            }
+        }
+    }
+
+    private static Conversation parseUserMessage(NodeList messages) {
+        List<TextMessage> textMessages = new ArrayList<>();
+
+        for (int temp = 0; temp < messages.getLength(); temp++) {
+            Node node = messages.item(temp);
             if (node.getNodeType() == Node.ELEMENT_NODE){
                 Element element = (Element) node;
 
                 LocalDateTime createdOn = LocalDateTime.parse(element.getAttribute("createdOn"));
                 String content = element.getElementsByTagName("content").item(0).getTextContent();
 
-                NodeList childNodes = element.getChildNodes();
-                String firstName = "";
-                String lastName = "";
-                for (int i = 0; i < childNodes.getLength(); i++) {
-                    Node tempNode = list.item(temp);
-                    if (node.getNodeType() == Node.ELEMENT_NODE){
-                        Element sentBy = (Element) tempNode;
-                        sentBy.getElementsByTagName("firstName").item(0).getTextContent();
-                        sentBy.getElementsByTagName("lastName").item(0).getTextContent();
-                    }
-                }
-                textMessages.add(new TextMessage(content, createdOn, new User(firstName, lastName)));
+                String firstName = element.getElementsByTagName("firstName").item(0).getTextContent();
+                String lastName = element.getElementsByTagName("lastName").item(0).getTextContent();
+
+                TextMessage textMessage = new TextMessage(content, createdOn, new User(firstName, lastName));
+                textMessages.add(textMessage);
             }
         }
 
-        textMessages.forEach(msg -> {
-            ConversationManager.addMessage(msg);
-        });
-
+        return new Conversation(textMessages, UserManager.getLoggedInUser());
     }
 
     private static void parseAppSettings(Document parsedDocument) {

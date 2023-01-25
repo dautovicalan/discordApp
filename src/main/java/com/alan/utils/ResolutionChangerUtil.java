@@ -6,7 +6,7 @@ import com.alan.models.ResolutionType;
 import com.alan.models.Settings;
 import javafx.stage.Stage;
 
-public class ResolutionChangerUtil {
+public final class ResolutionChangerUtil {
 
     private ResolutionChangerUtil(){
     }

@@ -3,9 +3,6 @@ package com.alan.businessLayer;
 import com.alan.models.User;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class UserManager {
 

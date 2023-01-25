@@ -1,10 +1,11 @@
 package com.alan.businessLayer;
 
-import com.alan.models.Message;
 import com.alan.models.TextMessage;
 import com.alan.models.User;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -28,7 +29,6 @@ public class ClientHandler implements Runnable{
    clientHandlers.add(this);
 
    System.out.println(user + " connected to the chat");
-   //broadcastNewConnectedClient(this.user);
 
   } catch (Exception e) {
    e.printStackTrace();
@@ -49,19 +49,6 @@ public class ClientHandler implements Runnable{
     e.printStackTrace();
     closeEverything();
     break;
-   }
-  }
- }
-
- private void broadcastNewConnectedClient(User user) {
-  for (ClientHandler clientHandler :
-          clientHandlers) {
-   try {
-    if (clientHandler.user.getUserId() != user.getUserId()){
-     clientHandler.dataOutputStream.writeObject(user);
-    }
-   } catch (Exception e) {
-    e.printStackTrace();
    }
   }
  }

@@ -40,7 +40,7 @@
       <TextField fx:id="forename" promptText="Enter last name" GridPane.columnIndex="2" GridPane.rowIndex="2" />
       <ImageView fx:id="profilePicture" fitHeight="99.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../../../../../../Downloads/defaultPicture.png" />
+            <Image url="file:/Users/alandautovic/Development/Uni_Projects/discordApp/src/main/resources/com/alan/discordapp/defaultPicture.jpg" />
          </image>
       </ImageView>
       <Button fx:id="changePicture" mnemonicParsing="false" onAction="#changePicture" prefHeight="43.0" prefWidth="114.0" styleClass="mainButton" stylesheets="@styles/style.css" text="Change Picture" GridPane.halignment="RIGHT" />

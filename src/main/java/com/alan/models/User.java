@@ -3,6 +3,7 @@ package com.alan.models;
 import javafx.scene.image.Image;
 
 import java.io.*;
+import java.util.Objects;
 
 public class User implements Serializable, Externalizable, Comparable<User> {
 
@@ -21,6 +22,10 @@ public class User implements Serializable, Externalizable, Comparable<User> {
 
     public void addMessage() {
         this.messagesSent++;
+    }
+
+    public void setMessagesSent(int messagesSent) {
+        this.messagesSent = messagesSent;
     }
 
     private Image userPicture;
@@ -65,7 +70,7 @@ public class User implements Serializable, Externalizable, Comparable<User> {
     }
 
     public String prepareForLeaderBoard() {
-        return (firstName.trim() + "_" +  lastName.trim() + "|" + System.lineSeparator());
+        return (firstName.trim() + "_" +  lastName.trim() + "|" + messagesSent + System.lineSeparator());
     }
 
     public String getFirstName() {
@@ -84,6 +89,21 @@ public class User implements Serializable, Externalizable, Comparable<User> {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof User)) {
+            return false;
+        }
+        User user = (User) obj;
+        return this.firstName.toUpperCase().trim().equals(user.getFirstName().toUpperCase().trim()) &&
+                this.lastName.toUpperCase().trim().equals(user.getLastName().toUpperCase().trim());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName);
     }
 
     @Override

@@ -2,19 +2,30 @@ package com.alan.discordapp;
 
 import com.alan.businessLayer.ConversationManager;
 import com.alan.businessLayer.UserManager;
-import com.alan.models.*;
+import com.alan.models.Client;
+import com.alan.models.Conversation;
+import com.alan.models.TextMessage;
+import com.alan.utils.AlertUtils;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ChatScreenController implements Initializable {
@@ -37,23 +48,34 @@ public class ChatScreenController implements Initializable {
     @FXML
     private ScrollPane scrollPaneMain;
     @FXML
-    private ScrollPane scrollPaneOnlineUsers;
-    @FXML
-    private VBox vBoxOnlineUsers;
+    private ListView<Conversation> lwSavedConversations;
 
     private Client client;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        loadConversations();
+
         client = new Client(UserManager.getLoggedInUser());
         initListeners();
 
         client.listenForMessage(vBoxMessage);
-        // vBoxOnlineUsers.getChildren().add(prepareOnlineUserBoxDesign(Pos.CENTER, new User("Alan", "Dautovic")));
-        //client.listenForNewOnlineUsers(vBoxOnlineUsers);
 
+    }
 
+    private void loadConversations() {
+        File dir = new File(Paths.get("savedChats").toUri());
+        File[] savedChats = dir.listFiles();
+
+        if (savedChats.length != 0) {
+            try {
+                List<Conversation> allConversations = ConversationManager.loadAllConversations(savedChats);
+                lwSavedConversations.setItems(FXCollections.observableArrayList(allConversations));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void initListeners() {
@@ -62,13 +84,13 @@ public class ChatScreenController implements Initializable {
 
         sendButton.setOnAction(actionEvent -> {
             String messageToSend = textField.getText();
-            UserManager.getLoggedInUser().addMessage();
             if (!messageToSend.isEmpty()){
                 vBoxMessage.getChildren()
                         .add(prepareMessageBoxDesign(Pos.CENTER_RIGHT, messageToSend, BLUE_MESSAGES));
 
                 TextMessage message = new TextMessage(UserManager.getLoggedInUser(), messageToSend);
                 ConversationManager.addMessage(message);
+                UserManager.getLoggedInUser().addMessage();
                 try {
                     client.sendMessage(message);
                 } catch (IOException e) {
@@ -86,25 +108,6 @@ public class ChatScreenController implements Initializable {
                 .add(prepareMessageBoxDesign(Pos.CENTER_LEFT, messageFromClient, GREY_MESSAGES)));
     }
 
-    public static void addOnlineUserToComponent(User user, VBox vBox){
-        Platform.runLater(() -> {
-            vBox.getChildren().add(prepareOnlineUserBoxDesign(Pos.CENTER, user));
-        });
-    }
-
-    private static HBox prepareOnlineUserBoxDesign(Pos center, User user) {
-        HBox hBox = new HBox();
-        hBox.setPadding(new Insets(10, 10, 10, 10));
-        Text text = new Text(user.getFirstName() + " " + user.getLastName());
-        TextFlow textFlow = new TextFlow(text);
-        textFlow.setPadding(new Insets(10, 10, 10, 10));
-
-        textFlow.setStyle(BLUE_MESSAGES);
-
-        hBox.getChildren().add(textFlow);
-        return hBox;
-    }
-
     private static HBox prepareMessageBoxDesign(Pos position, String message, String design){
         HBox hBox = new HBox();
         hBox.setAlignment(position);
@@ -120,6 +123,28 @@ public class ChatScreenController implements Initializable {
         hBox.getChildren().add(textFlow);
 
         return hBox;
+    }
+
+    public void saveConversation(){
+        try {
+            ConversationManager.saveCurrentUserConversations(UserManager.getLoggedInUser());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void loadConversation(){
+        if (lwSavedConversations.getSelectionModel().getSelectedItem() == null){
+            AlertUtils.showInfoMessage("Please select conversation to load");
+            return;
+        }
+        Conversation selectedConversation = lwSavedConversations.getSelectionModel().getSelectedItem();
+        selectedConversation.getAllMessages().forEach(msg -> {
+            if (msg.getMessageSender().equals(selectedConversation.getUserConversation())){
+                vBoxMessage.getChildren().add(prepareMessageBoxDesign(Pos.CENTER_RIGHT, msg.getMessageContent(), BLUE_MESSAGES));
+            } else {
+                vBoxMessage.getChildren().add(prepareMessageBoxDesign(Pos.CENTER_LEFT, msg.getMessageContent(), GREY_MESSAGES));
+            }
+        });
     }
 
 }

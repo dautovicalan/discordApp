@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fakediscord>
+   <userinfo pid="41906">
+      <firstName>Alan</firstName>
+      <lastName>Pero</lastName>
+      <userPicturePath>file:/Users/alandautovic/Desktop/Screenshot%202023-01-19%20at%2016.51.43.png</userPicturePath>
+      <messagesSent>3</messagesSent>
+      <loggedInDate>2023-01-24T21:21:44.859718</loggedInDate>
+   </userinfo>
+   <userConversations>
+      <conversation>
+         <message createdOn="2023-01-24T20:36:07.878144">
+            <content>sasas</content>
+            <sentBy>
+               <firstName>Alan</firstName>
+               <lastName>Pero</lastName>
+            </sentBy>
+         </message>
+         <message createdOn="2023-01-24T20:36:08.974283">
+            <content>sasassasa</content>
+            <sentBy>
+               <firstName>Alan</firstName>
+               <lastName>Pero</lastName>
+            </sentBy>
+         </message>
+         <message createdOn="2023-01-24T20:36:10.663129">
+            <content>sasassasasasa</content>
+            <sentBy>
+               <firstName>Alan</firstName>
+               <lastName>Pero</lastName>
+            </sentBy>
+         </message>
+      </conversation>
+   </userConversations>
+   <appSettings>
+      <resolution>SMALL</resolution>
+   </appSettings>
+</fakediscord>

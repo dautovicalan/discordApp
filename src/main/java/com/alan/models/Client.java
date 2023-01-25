@@ -1,11 +1,13 @@
 package com.alan.models;
 
+import com.alan.businessLayer.ConversationManager;
 import com.alan.discordapp.ChatScreenController;
 import com.alan.discordapp.Server;
 import javafx.scene.layout.VBox;
-import org.w3c.dom.Text;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class Client {
@@ -46,6 +48,7 @@ public class Client {
                         messageFromChat = (TextMessage) dataInputStream.readObject();
                         System.out.println(messageFromChat.getMessageContent());
                         ChatScreenController.addMessageToComponent(messageFromChat.getMessageContent(), vBoxMessage);
+                        ConversationManager.addMessage(messageFromChat);
                     } catch (Exception e) {
                         System.out.println("Error on client run method");
                         e.printStackTrace();
@@ -71,29 +74,5 @@ public class Client {
             e.printStackTrace();
             System.exit(-1);
         }
-    }
-
-    public void listenForNewOnlineUsers(VBox vBoxOnlineUsers) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                User newConnectedUser;
-                while(socket.isConnected()){
-                    try {
-                        Object tempObject = dataInputStream.readObject();
-                        if (tempObject instanceof User){
-                            newConnectedUser = (User) tempObject;
-                            ChatScreenController.addOnlineUserToComponent(newConnectedUser, vBoxOnlineUsers);
-                            System.out.println("Client model: " + newConnectedUser);
-                        }
-                    } catch (Exception e) {
-                        System.out.println("Error on listen for new online users");
-                        e.printStackTrace();
-                        closeEverything();
-                        break;
-                    }
-                }
-            }
-        });
     }
 }
