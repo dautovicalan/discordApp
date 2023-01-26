@@ -31,38 +31,29 @@ public class HomeScreenController implements Initializable {
     }
 
     public void showChatScene(){
-        try {
-            AnchorPane chatView = FXMLLoader.load(getClass().getResource("chatScreen.fxml"));
-            mainPane.setCenter(chatView);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        mainPane.setCenter(loadScene("chatScreen.fxml"));
     }
 
     public void showVoiceScene(){
-        try{
-            AnchorPane voiceView = FXMLLoader.load(getClass().getResource("voiceScreen.fxml"));
-            mainPane.setCenter(voiceView);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        mainPane.setCenter(loadScene("voiceScreen.fxml"));
     }
 
     public void showSendPictureScene(){
-        try {
-            AnchorPane sendPictureView = FXMLLoader.load(getClass().getResource("sendPictureScreen.fxml"));
-            mainPane.setCenter(sendPictureView);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        mainPane.setCenter(loadScene("sendPictureScreen.fxml"));
     }
 
     public void showVideoScene(){
+        mainPane.setCenter(loadScene("cameraScreen.fxml"));
+    }
+
+    private AnchorPane loadScene(String resource) {
+        AnchorPane scene = null;
         try {
-            AnchorPane cameraScreen = FXMLLoader.load(getClass().getResource("cameraScreen.fxml"));
-            mainPane.setCenter(cameraScreen);
+            scene = FXMLLoader.load(getClass().getResource(resource));
         } catch (IOException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
+        return scene;
     }
 }

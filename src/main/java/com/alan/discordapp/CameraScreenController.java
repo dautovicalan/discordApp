@@ -2,6 +2,7 @@ package com.alan.discordapp;
 
 import com.alan.utils.AlertUtils;
 import com.alan.utils.CameraCaptureUtils;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.ImageView;
@@ -29,12 +30,12 @@ public class CameraScreenController implements Initializable {
     }
 
     private VideoCapture videoCapture = null;
-    private final Mat frame = new Mat();
-    MatOfByte mem = new MatOfByte();
+    private Mat frame = new Mat();
+    private MatOfByte mem = new MatOfByte();
+    private DaemonThread daemonThread = new DaemonThread();
 
     public void startCamera(){
         videoCapture = new VideoCapture(0);
-        DaemonThread daemonThread = new DaemonThread();
         Thread thread = new Thread(daemonThread);
         thread.setDaemon(true);
         daemonThread.runnable = true;
@@ -42,17 +43,18 @@ public class CameraScreenController implements Initializable {
     }
 
     public void saveImage(){
-        if (videoCapture.isOpened()){
-            String capturedImagePath = "capturedPictures";
-            Imgcodecs.imwrite(capturedImagePath + File.separator + LocalDateTime.now(), frame);
-            AlertUtils.showInfoMessage("Successfully saved to " + capturedImagePath + " folder");
+        if (videoCapture != null && videoCapture.isOpened()){
+            daemonThread.takePicture = true;
+            return;
         }
+        AlertUtils.showInfoMessage("Please start camera...");
     }
 
     class DaemonThread implements Runnable{
 
         // modify the value of a variable by different threads
         public volatile boolean runnable = false;
+        public volatile boolean takePicture = false;
         @Override
         public void run() {
             synchronized (this){
@@ -68,6 +70,12 @@ public class CameraScreenController implements Initializable {
                             if (!runnable){
                                 System.out.println("Waiting...");
                                 this.wait();
+                            }
+                            if (takePicture){
+                                String capturedImagePath = "capturedPictures";
+                                Imgcodecs.imwrite(capturedImagePath + File.separator + LocalDateTime.now() + ".jpg", frame);
+                                Platform.runLater(() -> AlertUtils.showInfoMessage("Successfully saved to " + capturedImagePath + " folder"));
+                                takePicture = false;
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

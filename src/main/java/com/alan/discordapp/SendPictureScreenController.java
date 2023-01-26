@@ -3,6 +3,8 @@ package com.alan.discordapp;
 import com.alan.businessLayer.UserManager;
 import com.alan.models.ImageMessage;
 import com.alan.rmi.PictureService;
+import com.alan.rmi.PictureServiceImpl;
+import com.alan.rmi.RMIServer;
 import com.alan.utils.AlertUtils;
 import com.alan.utils.FileUtils;
 import javafx.fxml.FXML;
@@ -44,8 +46,8 @@ public class SendPictureScreenController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         try {
-            serverRegistry = LocateRegistry.getRegistry("127.0.0.1", 2000);
-            pictureService = (PictureService) serverRegistry.lookup("pictureService");
+            serverRegistry = LocateRegistry.getRegistry(RMIServer.getHostName(), RMIServer.getPortNumber());
+            pictureService = (PictureService) serverRegistry.lookup(PictureServiceImpl.LOOKUP_NAME);
             loadListeners();
             loadImages();
         } catch (Exception e) {

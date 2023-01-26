@@ -3,8 +3,7 @@ package com.alan.discordapp;
 import com.alan.businessLayer.ClientHandler;
 import com.alan.jndi.JndiHelper;
 
-import javax.naming.NamingException;
-import java.io.*;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -19,9 +18,7 @@ public class Server {
         try {
             HOST = JndiHelper.getValueFromConfiguration(SERVER_HOST_KEY);
             PORT = Integer.parseInt(JndiHelper.getValueFromConfiguration(SERVER_PORT_KEY));
-        } catch (NamingException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

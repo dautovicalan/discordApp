@@ -1,6 +1,8 @@
 package com.alan.discordapp;
 
+import com.alan.rmi.RMIServer;
 import com.alan.rmi.VoiceService;
+import com.alan.rmi.VoiceServiceImpl;
 import com.alan.utils.AlertUtils;
 import com.alan.utils.JavaSoundRecorder;
 import javafx.fxml.FXML;
@@ -54,10 +56,12 @@ public class VoiceScreenController implements Initializable {
         loadLocalVoiceMessages();
         loadRmiVoiceMessages();
     }
-    private void loadLocalVoiceMessages() {
 
+    private static final String DIR = "voiceMessages";
+
+    private void loadLocalVoiceMessages() {
         new Thread(() -> {
-            File dir = new File(Paths.get("voiceMessages").toUri());
+            File dir = new File(Paths.get(DIR).toUri());
             File[] voiceMessages = dir.listFiles();
 
             for (File f :
@@ -70,8 +74,8 @@ public class VoiceScreenController implements Initializable {
 
     private void loadRmiVoiceMessages() {
         try {
-            serverRegistry = LocateRegistry.getRegistry("127.0.0.1", 2000);
-            voiceService = (VoiceService) serverRegistry.lookup("voiceService");
+            serverRegistry = LocateRegistry.getRegistry(RMIServer.getHostName(), RMIServer.getPortNumber());
+            voiceService = (VoiceService) serverRegistry.lookup(VoiceServiceImpl.LOOKUP_NAME);
             loadVoices();
         } catch (Exception e) {
             e.printStackTrace();

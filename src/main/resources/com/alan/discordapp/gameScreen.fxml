@@ -16,17 +16,17 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem fx:id="miGenerateDocumentation" mnemonicParsing="false" onAction="#generateDocumentation" text="Generate Doucementation" />
+              <MenuItem fx:id="miGenerateDocumentation" mnemonicParsing="false" text="Generate Doucementation" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="XML">
                <items>
-                  <MenuItem fx:id="miSaveToXml" mnemonicParsing="false" onAction="#generateDocumentation" text="Generate XML" />
+                  <MenuItem fx:id="miSaveToXml" mnemonicParsing="false" text="Generate XML" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="App">
                <items>
-                  <MenuItem fx:id="miExit" mnemonicParsing="false" onAction="#exitApplication" text="Exit" />
+                  <MenuItem fx:id="miExit" mnemonicParsing="false" text="Exit" />
                </items>
             </Menu>
         </menus>

@@ -1,7 +1,5 @@
 package com.alan.rmi;
 
-import com.alan.models.ImageMessage;
-
 import java.io.File;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -20,4 +18,6 @@ public class VoiceServiceImpl implements VoiceService{
     public List<File> receiveAllVoiceMessages() throws RemoteException {
         return allVoices;
     }
+
+    public static final String LOOKUP_NAME = "voiceService";
 }

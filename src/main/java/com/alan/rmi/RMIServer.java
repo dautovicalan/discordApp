@@ -1,11 +1,7 @@
 package com.alan.rmi;
 
 import com.alan.jndi.JndiHelper;
-import com.alan.models.User;
 
-import javax.naming.NamingException;
-import java.io.IOException;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -13,6 +9,7 @@ import java.rmi.server.UnicastRemoteObject;
 public class RMIServer {
 
     private static final String RMI_PORT_KEY = "rmi.port";
+    private static final String RMI_HOST_KEY = "rmi.host";
     private static final int RANDOM_PORT_HINT_IMAGES = 0;
     private static final int RANDOM_PORT_HINT_VOICE = 1;
 
@@ -41,5 +38,12 @@ public class RMIServer {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public static String getHostName() throws Exception {
+        return JndiHelper.getValueFromConfiguration(RMI_HOST_KEY);
+    }
+
+    public static Integer getPortNumber() throws Exception {
+        return Integer.valueOf(JndiHelper.getValueFromConfiguration(RMI_PORT_KEY));
     }
 }

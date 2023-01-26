@@ -16,4 +16,6 @@ public class PictureServiceImpl implements PictureService{
     public List<ImageMessage> receiveAllSentPictures() throws RemoteException {
         return allSentPictures;
     }
+
+    public static final String LOOKUP_NAME = "pictureService";
 }
